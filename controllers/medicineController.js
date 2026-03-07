@@ -139,7 +139,7 @@ exports.searchMedicine = async (req, res) => {
     const medicines = await Medicine.find({
       name: new RegExp(name, "i"),
       available: true
-    }).populate("pharmacy", "name phone area");
+    }).populate("pharmacy", "_id name phone area");
 
     // Add confidence scores to each medicine
     const medicinesWithConfidence = medicines.map(medicine => {
@@ -180,7 +180,7 @@ exports.getBestMedicines = async (req, res) => {
       available: true,
       rating: { $gt: 0 }
     })
-      .populate("pharmacy", "name phone area")
+      .populate("pharmacy", "_id name phone area")
       .sort({ rating: -1, reviews: -1 })
       .limit(limit);
 
@@ -210,7 +210,7 @@ exports.getRecommendations = async (req, res) => {
     const recommendations = await Medicine.find({
       available: true
     })
-      .populate("pharmacy", "name phone area")
+      .populate("pharmacy", "_id name phone area")
       .sort({ views: -1, createdAt: -1, rating: -1 })
       .limit(limit);
 
@@ -241,7 +241,7 @@ exports.getMedicinesByCategory = async (req, res) => {
       category,
       available: true
     })
-      .populate("pharmacy", "name phone area")
+      .populate("pharmacy", "_id name phone area")
       .sort({ rating: -1, views: -1 })
       .limit(limit);
 
@@ -352,7 +352,7 @@ exports.getNearbyMedicines = async (req, res) => {
     const medicines = await Medicine.find(medicineQuery)
       .populate({
         path: "pharmacy",
-        select: "name phone area latitude longitude deliveryTime licenseNumber address"
+        select: "_id name phone area latitude longitude deliveryTime licenseNumber address"
       });
 
     // Filter medicines from pharmacies within radius and add distance info
@@ -654,7 +654,7 @@ exports.getMedicinesWithinRadius = async (req, res) => {
     const medicines = await Medicine.find(medicineQuery)
       .populate({
         path: 'pharmacy',
-        select: 'name phone area latitude longitude deliveryTime licenseNumber address'
+        select: '_id name phone area latitude longitude deliveryTime licenseNumber address'
       });
 
     // Calculate distances and add to medicines

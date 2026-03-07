@@ -101,7 +101,7 @@ exports.getMyPrescriptions = async (req, res) => {
     }
 
     const prescriptions = await Prescription.find(query)
-      .populate('responses.pharmacy', 'name phone area')
+      .populate('responses.pharmacy', '_id name phone area')
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(skip);
@@ -237,7 +237,7 @@ exports.getPrescriptionDetail = async (req, res) => {
       { new: true }
     )
       .populate('user', 'name phone')
-      .populate('responses.pharmacy', 'name phone area latitude longitude');
+      .populate('responses.pharmacy', '_id name phone area latitude longitude');
 
     if (!prescription) {
       return res.status(404).json({ message: "Prescription not found" });

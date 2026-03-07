@@ -451,7 +451,7 @@ exports.getAllReservations = async (req, res) => {
 
     const reservations = await Reservation.find(query)
       .populate('medicine', 'name price')
-      .populate('pharmacy', 'name')
+      .populate('pharmacy', '_id name')
       .populate('user', 'name email phone')
       .limit(limit)
       .skip(skip)
