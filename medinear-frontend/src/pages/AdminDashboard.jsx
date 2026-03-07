@@ -20,12 +20,14 @@ function AdminDashboard() {
   const [reservations, setReservations] = useState([]);
   
   const [userPage, setUserPage] = useState(1);
+  const [pharmacyPage, setPharmacyPage] = useState(1);
   const [medicineCount, setMedicineCount] = useState(0);
   const [pharmacyCount, setPharmacyCount] = useState(0);
   const [reservationCount, setReservationCount] = useState(0);
   const [dashboardError, setDashboardError] = useState('');
   const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
   const [usersPagination, setUsersPagination] = useState({ page: 1, pages: 1, total: 0 });
+  const [pharmaciesPagination, setPharmaciesPagination] = useState({ page: 1, pages: 1, total: 0 });
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
   
   const [searchUser, setSearchUser] = useState('');
@@ -235,7 +237,7 @@ function AdminDashboard() {
     if (activeTab === 'pharmacies') {
       fetchPharmacies();
     }
-  }, [activeTab, pharmacyCount, searchPharmacy, dateRange.startDate, dateRange.endDate]);
+  }, [activeTab, pharmacyPage, pharmacyCount, searchPharmacy, dateRange.startDate, dateRange.endDate]);
 
   // Fetch reservations when tab changes
   useEffect(() => {
@@ -339,11 +341,12 @@ function AdminDashboard() {
     try {
       setLoading(true);
       const response = await axios.get(`${API_BASE}/admin/pharmacies`, {
-        params: { page: 1, limit: 10, search: searchPharmacy, ...buildDateRangeParams() },
+        params: { page: pharmacyPage, limit: 50, search: searchPharmacy, ...buildDateRangeParams() },
         headers: apiHeaders,
       });
       const payload = extractPayload(response);
       setPharmacies(extractListPayload(payload, 'pharmacies'));
+      setPharmaciesPagination(payload?.pagination || { page: 1, pages: 1, total: 0 });
     } catch (error) {
       showToast?.('Failed to fetch pharmacies', 'error');
     } finally {
@@ -1117,9 +1120,11 @@ function AdminDashboard() {
                   <thead>
                     <tr>
                       <th>Name</th>
-                      <th>Location</th>
+                      <th>Address</th>
+                      <th>Area</th>
                       <th>Phone</th>
-                      <th>Rating</th>
+                      <th>Location</th>
+                      <th>Open 24x7</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -1128,9 +1133,15 @@ function AdminDashboard() {
                       pharmacies.map((p) => (
                         <tr key={p._id}>
                           <td>{p.name}</td>
-                          <td>{p.location?.city || p.location?.address}</td>
+                          <td>{p.address || 'N/A'}</td>
+                          <td>{p.area || p.city || 'N/A'}</td>
                           <td>{p.phone}</td>
-                          <td>⭐ {p.rating?.toFixed(1) || 'N/A'}</td>
+                          <td>
+                            {p.latitude && p.longitude 
+                              ? `${p.latitude.toFixed(4)}, ${p.longitude.toFixed(4)}`
+                              : 'No coordinates'}
+                          </td>
+                          <td>{p.open24x7 ? '✅ Yes' : '❌ No'}</td>
                           <td>
                             <button
                               className="btn-danger"
@@ -1142,12 +1153,31 @@ function AdminDashboard() {
                         </tr>
                       ))
                     ) : (
-                      <tr><td colSpan="5" className="empty">No pharmacies found</td></tr>
+                      <tr><td colSpan="7" className="empty">No pharmacies found</td></tr>
                     )}
                   </tbody>
                 </table>
               </div>
             )}
+            <div className="pagination-row">
+              <button
+                className="btn-secondary"
+                disabled={pharmacyPage <= 1}
+                onClick={() => setPharmacyPage((prev) => Math.max(1, prev - 1))}
+              >
+                Previous
+              </button>
+              <span className="pagination-info">
+                Page {pharmaciesPagination.page || pharmacyPage} of {pharmaciesPagination.pages || 1} | Total Pharmacies: {pharmaciesPagination.total || pharmacies.length}
+              </span>
+              <button
+                className="btn-secondary"
+                disabled={pharmacyPage >= (pharmaciesPagination.pages || 1)}
+                onClick={() => setPharmacyPage((prev) => Math.min(pharmaciesPagination.pages || 1, prev + 1))}
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
 
