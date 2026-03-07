@@ -27,7 +27,9 @@ export default function NearbyResultsPreview({
   const pharmacyGroups = {};
   
   medicines.forEach(medicine => {
-    const pharmacyKey = medicine.pharmacy._id || medicine.pharmacy.name;
+    if (!medicine.pharmacy) return; // Skip medicines without pharmacy data
+    
+    const pharmacyKey = medicine.pharmacy._id || medicine.pharmacy.name || 'unknown';
     
     if (!pharmacyGroups[pharmacyKey]) {
       pharmacyGroups[pharmacyKey] = {

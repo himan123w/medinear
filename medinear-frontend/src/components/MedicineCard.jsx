@@ -94,9 +94,9 @@ export default function MedicineCard({
       <div className="pharmacy-section">
         <h4 className="pharmacy-name">
           <span className="pharmacy-icon">💊</span>
-          {medicine.pharmacy.name}
+          {medicine.pharmacy?.name || 'Pharmacy Not Available'}
         </h4>
-        {showDistance && pharmacyDistanceInfo && (
+        {showDistance && pharmacyDistanceInfo && medicine.pharmacy?.area && (
           <p className="pharmacy-location">
             <span className="location-icon">📍</span>
             {medicine.pharmacy.area}
@@ -131,8 +131,9 @@ export default function MedicineCard({
 
         <button
           className="btn btn-card-action call-btn"
-          onClick={() => onCall(medicine.pharmacy.phone)}
-          title={`Call ${medicine.pharmacy.name} now`}
+          onClick={() => medicine.pharmacy?.phone && onCall(medicine.pharmacy.phone)}
+          title={`Call ${medicine.pharmacy?.name || 'pharmacy'} now`}
+          disabled={!medicine.pharmacy?.phone}
         >
           <span className="btn-icon">📞</span>
           <span className="btn-text">Call Pharmacy</span>

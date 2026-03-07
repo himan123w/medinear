@@ -226,18 +226,24 @@ export default function Home() {
                   </div>
 
                   <div className="pharmacy-info">
-                    <h4>💊 {medicine.pharmacy.name}</h4>
-                    <p><strong>Area:</strong> {medicine.pharmacy.area}</p>
-                    <p><strong>License:</strong> {medicine.pharmacy.licenseNumber}</p>
+                    <h4>💊 {medicine.pharmacy?.name || 'Pharmacy Not Available'}</h4>
+                    {medicine.pharmacy?.area && (
+                      <p><strong>Area:</strong> {medicine.pharmacy.area}</p>
+                    )}
+                    {medicine.pharmacy?.licenseNumber && (
+                      <p><strong>License:</strong> {medicine.pharmacy.licenseNumber}</p>
+                    )}
                   </div>
 
                   <div className="medicine-actions">
-                    <button 
-                      className="btn btn-sm btn-secondary"
-                      onClick={() => handleCallPharmacy(medicine.pharmacy.phone)}
-                    >
-                      📞 Call: {medicine.pharmacy.phone}
-                    </button>
+                    {medicine.pharmacy?.phone && (
+                      <button 
+                        className="btn btn-sm btn-secondary"
+                        onClick={() => handleCallPharmacy(medicine.pharmacy.phone)}
+                      >
+                        📞 Call: {medicine.pharmacy.phone}
+                      </button>
+                    )}
                     <button 
                       className="btn btn-sm btn-primary"
                       onClick={() => handleAddToCart(medicine)}
