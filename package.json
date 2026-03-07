@@ -9,6 +9,7 @@
     "restart": "lsof -ti:5001 | xargs kill -9 2>/dev/null; node server.js",
     "kill-port": "lsof -ti:5001 | xargs kill -9 2>/dev/null || echo 'No process on port 5001'",
     "seed": "node seed-database.js",
+    "populate-feature-health": "node scripts/populate-feature-health.js",
     "build": "cd medinear-frontend && npm run build"
   },
   "dependencies": {

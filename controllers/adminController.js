@@ -2,33 +2,196 @@ const User = require('../models/User');
 const Pharmacy = require('../models/Pharmacy');
 const Medicine = require('../models/Medicine');
 const Reservation = require('../models/Reservation');
+const FeatureHealth = require('../models/FeatureHealth');
+const { FEATURE_DEFINITIONS } = require('../middleware/featureHealthTracker');
 const { formatSuccessResponse, formatErrorResponse } = require('../middleware/responseFormatter');
+
+function parseDateRange(query = {}) {
+  const { startDate, endDate } = query;
+  const createdAt = {};
+
+  if (startDate) {
+    const start = new Date(startDate);
+    if (!Number.isNaN(start.getTime())) {
+      createdAt.$gte = start;
+    }
+  }
+
+  if (endDate) {
+    const end = new Date(endDate);
+    if (!Number.isNaN(end.getTime())) {
+      // Include complete end day in local timezone.
+      end.setHours(23, 59, 59, 999);
+      createdAt.$lte = end;
+    }
+  }
+
+  if (!createdAt.$gte && !createdAt.$lte) {
+    return {};
+  }
+
+  return { createdAt };
+}
+
+function buildCriticalAlerts(stats = {}) {
+  const alerts = [];
+  const totalReservations = stats.totalReservations || 0;
+  const cancellationRate = totalReservations
+    ? Number(((stats.cancelledReservations || 0) / totalReservations * 100).toFixed(1))
+    : 0;
+
+  if (stats.lowStockMedicines > 0) {
+    alerts.push({
+      severity: 'critical',
+      title: 'Low Stock Risk',
+      message: `${stats.lowStockMedicines} medicines are below alert level.`,
+      action: 'Review inventory and restock high-demand medicines.'
+    });
+  }
+
+  if ((stats.featureHealth?.criticalFeatures || 0) > 0) {
+    alerts.push({
+      severity: 'critical',
+      title: 'Feature Reliability Risk',
+      message: `${stats.featureHealth.criticalFeatures} platform features are currently critical.`,
+      action: 'Check failing APIs in Feature Health table and resolve errors.'
+    });
+  }
+
+  if (cancellationRate >= 20) {
+    alerts.push({
+      severity: 'warning',
+      title: 'High Cancellation Rate',
+      message: `Reservation cancellation rate is ${cancellationRate}%.`,
+      action: 'Audit pharmacy fulfillment delays and unavailable stock.'
+    });
+  }
+
+  if ((stats.featureHealth?.unknownFeatures || 0) > 0) {
+    alerts.push({
+      severity: 'info',
+      title: 'Untracked Feature Traffic',
+      message: `${stats.featureHealth.unknownFeatures} features have no recent traffic.`,
+      action: 'Run feature traffic seeding or QA flows before launch.'
+    });
+  }
+
+  return alerts;
+}
+
+function buildFeatureHealthSummary(featureMetrics = []) {
+  const metricsMap = new Map(featureMetrics.map((item) => [item.featureKey, item]));
+
+  const features = FEATURE_DEFINITIONS.map((definition) => {
+    const metric = metricsMap.get(definition.key);
+    const totalHits = metric?.totalHits || 0;
+    const successHits = metric?.successHits || 0;
+    const serverErrorHits = metric?.serverErrorHits || 0;
+    const totalResponseTimeMs = metric?.totalResponseTimeMs || 0;
+    const successRate = totalHits ? Number(((successHits / totalHits) * 100).toFixed(2)) : 0;
+    const averageResponseTimeMs = totalHits ? Number((totalResponseTimeMs / totalHits).toFixed(2)) : 0;
+
+    let status = 'unknown';
+    if (totalHits > 0) {
+      if (successRate >= 95 && serverErrorHits === 0) {
+        status = 'healthy';
+      } else if (successRate >= 85) {
+        status = 'warning';
+      } else {
+        status = 'critical';
+      }
+    }
+
+    return {
+      featureKey: definition.key,
+      featureName: definition.name,
+      routePattern: definition.routePattern,
+      status,
+      totalHits,
+      successRate,
+      averageResponseTimeMs,
+      lastStatusCode: metric?.lastStatusCode || null,
+      lastHitAt: metric?.lastHitAt || null
+    };
+  });
+
+  const healthyFeatures = features.filter((item) => item.status === 'healthy').length;
+  const warningFeatures = features.filter((item) => item.status === 'warning').length;
+  const criticalFeatures = features.filter((item) => item.status === 'critical').length;
+  const unknownFeatures = features.filter((item) => item.status === 'unknown').length;
+  const trackedFeatures = features.length;
+  const knownFeatures = trackedFeatures - unknownFeatures;
+  const overallSuccessRate = knownFeatures
+    ? Number(
+        (
+          features
+            .filter((item) => item.status !== 'unknown')
+            .reduce((sum, item) => sum + item.successRate, 0) / knownFeatures
+        ).toFixed(2)
+      )
+    : 0;
+
+  return {
+    trackedFeatures,
+    healthyFeatures,
+    warningFeatures,
+    criticalFeatures,
+    unknownFeatures,
+    overallSuccessRate,
+    features
+  };
+}
 
 /**
  * Admin Dashboard - Get Statistics (Optimized with Aggregation)
  */
 exports.getDashboardStats = async (req, res) => {
   try {
+    const dateRangeFilter = parseDateRange(req.query);
+
     // Use Promise.all to fetch all counts in parallel instead of sequentially
     const [
       totalUsers,
       totalPharmacies,
       totalMedicines,
       totalReservations,
-      reservationStats
+      reservationStats,
+      featureHealthMetrics,
+      lowStockMedicines
     ] = await Promise.all([
-      User.countDocuments().hint({ createdAt: 1 }),
-      Pharmacy.countDocuments().hint({ createdAt: 1 }),
-      Medicine.countDocuments().hint({ createdAt: 1 }),
-      Reservation.countDocuments().hint({ createdAt: 1 }),
+      User.countDocuments(dateRangeFilter),
+      Pharmacy.countDocuments(dateRangeFilter),
+      Medicine.countDocuments(dateRangeFilter),
+      Reservation.countDocuments(dateRangeFilter),
       Reservation.aggregate([
+        {
+          $match: dateRangeFilter
+        },
         {
           $group: {
             _id: '$status',
             count: { $sum: 1 }
           }
         }
-      ])
+      ]),
+      FeatureHealth.find({})
+        .select('featureKey totalHits successHits serverErrorHits totalResponseTimeMs lastStatusCode lastHitAt')
+        .lean(),
+      Medicine.aggregate([
+        {
+          $match: dateRangeFilter
+        },
+        {
+          $match: {
+            $expr: {
+              $lte: ['$stock', '$stockAlert']
+            }
+          }
+        },
+        {
+          $count: 'count'
+        }
+      ]).then((rows) => rows?.[0]?.count || 0)
     ]);
 
     // Process reservation stats
@@ -37,15 +200,30 @@ exports.getDashboardStats = async (req, res) => {
       reservationMap[stat._id] = stat.count;
     });
 
+    const featureHealth = buildFeatureHealthSummary(featureHealthMetrics);
+    const criticalAlerts = buildCriticalAlerts({
+      totalReservations,
+      cancelledReservations: reservationMap['cancelled'] || 0,
+      lowStockMedicines,
+      featureHealth
+    });
+
     res.json(
       formatSuccessResponse({
         totalUsers,
         totalPharmacies,
         totalMedicines,
+        lowStockMedicines,
         totalReservations,
         activeReservations: reservationMap['active'] || 0,
         completedReservations: reservationMap['completed'] || 0,
         cancelledReservations: reservationMap['cancelled'] || 0,
+        featureHealth,
+        criticalAlerts,
+        dateRange: {
+          startDate: req.query.startDate || null,
+          endDate: req.query.endDate || null
+        },
         timestamp: new Date()
       }, 'Dashboard stats fetched successfully')
     );
@@ -61,10 +239,11 @@ exports.getAllUsers = async (req, res) => {
   try {
     const { page = 1, limit = 10, search = '' } = req.query;
     const skip = (page - 1) * limit;
+    const dateRangeFilter = parseDateRange(req.query);
 
     const query = search
-      ? { $or: [{ name: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }, { phone: new RegExp(search, 'i') }] }
-      : {};
+      ? { ...dateRangeFilter, $or: [{ name: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }, { phone: new RegExp(search, 'i') }] }
+      : { ...dateRangeFilter };
 
     const users = await User.find(query)
       .select('-password')
@@ -97,10 +276,11 @@ exports.getAllPharmacies = async (req, res) => {
   try {
     const { page = 1, limit = 10, search = '' } = req.query;
     const skip = (page - 1) * limit;
+    const dateRangeFilter = parseDateRange(req.query);
 
     const query = search
-      ? { name: new RegExp(search, 'i') }
-      : {};
+      ? { ...dateRangeFilter, name: new RegExp(search, 'i') }
+      : { ...dateRangeFilter };
 
     const pharmacies = await Pharmacy.find(query)
       .limit(limit)
@@ -132,10 +312,11 @@ exports.getAllMedicines = async (req, res) => {
   try {
     const { page = 1, limit = 10, search = '' } = req.query;
     const skip = (page - 1) * limit;
+    const dateRangeFilter = parseDateRange(req.query);
 
     const query = search
-      ? { name: new RegExp(search, 'i') }
-      : {};
+      ? { ...dateRangeFilter, name: new RegExp(search, 'i') }
+      : { ...dateRangeFilter };
 
     const medicines = await Medicine.find(query)
       .limit(limit)
@@ -264,13 +445,14 @@ exports.getAllReservations = async (req, res) => {
   try {
     const { page = 1, limit = 10, status = '' } = req.query;
     const skip = (page - 1) * limit;
+    const dateRangeFilter = parseDateRange(req.query);
 
-    const query = status ? { status } : {};
+    const query = status ? { ...dateRangeFilter, status } : { ...dateRangeFilter };
 
     const reservations = await Reservation.find(query)
-      .populate('medicineId', 'name price')
-      .populate('pharmacyId', 'name')
-      .populate('userId', 'name email phone')
+      .populate('medicine', 'name price')
+      .populate('pharmacy', 'name')
+      .populate('user', 'name email phone')
       .limit(limit)
       .skip(skip)
       .sort({ createdAt: -1 });

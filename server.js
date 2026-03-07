@@ -18,6 +18,7 @@ const { apiLimiter, authLimiter, heavyOperationLimiter } = require("./middleware
 const { responseFormatterMiddleware } = require("./middleware/responseFormatter");
 const { ErrorHandler, asyncHandler, notFoundHandler } = require("./middleware/errorHandler");
 const { logger, performanceMonitor, performanceMonitorMiddleware } = require("./services/monitoringService");
+const { featureHealthTracker } = require('./middleware/featureHealthTracker');
 
 // ===============================
 // Core Middlewares
@@ -35,6 +36,9 @@ app.use(validationMiddleware);
 
 // 2. Request tracking & performance monitoring
 app.use(performanceMonitorMiddleware(logger, performanceMonitor));
+
+// 2.1 Feature-level health tracking persisted in MongoDB
+app.use(featureHealthTracker);
 
 // 3. Response formatting (adds helper methods to res object)
 app.use(responseFormatterMiddleware);

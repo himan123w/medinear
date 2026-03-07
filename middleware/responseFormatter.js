@@ -88,7 +88,16 @@ const responseFormatterMiddleware = (req, res, next) => {
   next();
 };
 
+// Backward-compatible helpers used by existing controllers.
+const formatSuccessResponse = (data, message = 'Success', statusCode = 200) =>
+  ResponseFormatter.success(data, message, statusCode);
+
+const formatErrorResponse = (message, statusCode = 400, errors = null) =>
+  ResponseFormatter.error(message, statusCode, errors);
+
 module.exports = {
   ResponseFormatter,
-  responseFormatterMiddleware
+  responseFormatterMiddleware,
+  formatSuccessResponse,
+  formatErrorResponse
 };
