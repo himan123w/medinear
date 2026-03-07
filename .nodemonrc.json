@@ -1,0 +1,17 @@
+{
+  "watch": ["server.js", "routes", "controllers", "models", "middleware", "services", "utils"],
+  "ignore": ["node_modules", "dist", "logs", "medinear-frontend", ".git"],
+  "ext": "js,json",
+  "delay": 500,
+  "verbose": true,
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "execMap": {
+    "js": "node --unhandled-rejections=warn"
+  },
+  "events": {
+    "restart": "echo 'App restarting due to file change...'",
+    "crash": "echo 'App crashed. Waiting for file changes to restart...'"
+  }
+}

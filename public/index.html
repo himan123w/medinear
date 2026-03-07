@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Medicine Finder - Lucknow</title>
+</head>
+<body>
+  <h1>Search Medicine</h1>
+  <input type="text" id="medicineName" placeholder="Enter medicine name"/>
+  <button onclick="searchMedicine()">Search</button>
+  <div id="results"></div>
+
+<script>
+async function searchMedicine() {
+  const name = document.getElementById('medicineName').value;
+  const res = await fetch(`/api/medicine/search?name=${name}`);
+  const data = await res.json();
+
+  let html = "";
+  data.forEach(item => {
+    html += `<p><b>${item.name}</b> - ₹${item.price} <br/>
+    Pharmacy: ${item.pharmacy.name} <br/>
+    Contact: ${item.pharmacy.phone}</p><hr/>`;
+  });
+
+  document.getElementById('results').innerHTML = html;
+}
+</script>
+</body>
+</html>

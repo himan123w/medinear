@@ -1,0 +1,534 @@
+#!/usr/bin/env node
+
+/**
+ * 🏥 MediNear Enterprise API Documentation
+ * Complete endpoint reference with examples
+ */
+
+const fs = require('fs');
+const path = require('path');
+
+const apiDocumentation = {
+  title: '🏥 MediNear - Enterprise Medicine Platform API',
+  version: '1.0.0',
+  baseUrl: 'http://localhost:5001/api',
+  lastUpdated: new Date().toISOString(),
+  
+  overview: {
+    description: 'MediNear is a B2B SaaS platform for medicine availability management with AI-powered demand prediction',
+    features: [
+      'B2B Pharmacy Network Management',
+      'AI-Based Demand Prediction (Seasonal & Geographic)',
+      'Inventory Management & Stock Prediction',
+      'Prescription Processing & Management',
+      'Medicine Delivery Coordination',
+      'Analytics & Business Intelligence',
+      'Tiered SaaS Subscription Model',
+      'Enterprise Security (Validation, Rate Limiting)',
+      'Performance Monitoring & Caching'
+    ]
+  },
+
+  security: {
+    authentication: 'JWT Token in Authorization header',
+    rateLimit: '100 requests/minute per IP',
+    authRateLimit: '5 login attempts/15 minutes',
+    validation: 'Input sanitization on all endpoints',
+    cors: 'Enabled for frontend integration',
+    headers: {
+      example: {
+        'Authorization': 'Bearer <jwt_token>',
+        'Content-Type': 'application/json'
+      }
+    }
+  },
+
+  categories: {
+    health: {
+      name: '🏥 Health & System Status',
+      description: 'System monitoring and health check endpoints',
+      endpoints: [
+        {
+          method: 'GET',
+          path: '/health',
+          description: 'Quick health check (latest cached)',
+          auth: false,
+          response: {
+            success: true,
+            status: 'healthy',
+            timestamp: '2024-01-01T10:00:00Z'
+          }
+        },
+        {
+          method: 'GET',
+          path: '/health/detailed',
+          description: 'Full system diagnostics with all metrics',
+          auth: false,
+          response: {
+            success: true,
+            status: 'healthy',
+            checkDuration: '45ms',
+            components: {
+              database: { status: 'healthy', connected: true, collections: 12 },
+              system: { memoryUsage: { usagePercent: 65 }, cpuCount: 4 }
+            }
+          }
+        },
+        {
+          method: 'GET',
+          path: '/health/services',
+          description: 'Check status of all platform services',
+          auth: false,
+          response: {
+            success: true,
+            services: {
+              auth: { status: 'operational', latency: '5ms' },
+              pharmacy: { status: 'operational', latency: '8ms' },
+              ai: { status: 'operational', latency: '12ms' }
+            }
+          }
+        },
+        {
+          method: 'GET',
+          path: '/health/database',
+          description: 'Database connectivity check',
+          auth: false,
+          response: {
+            success: true,
+            database: { status: 'healthy', connected: true }
+          }
+        },
+        {
+          method: 'GET',
+          path: '/health/system',
+          description: 'System resources and performance',
+          auth: false,
+          response: {
+            success: true,
+            system: {
+              cpuCount: 4,
+              memoryUsage: { total: '8192MB', used: '5120MB', usagePercent: 62.5 }
+            }
+          }
+        }
+      ]
+    },
+
+    authentication: {
+      name: '🔐 Authentication',
+      description: 'User registration, login, and authentication',
+      endpoints: [
+        {
+          method: 'POST',
+          path: '/auth/register',
+          description: 'Register new user account',
+          rateLimit: '5 attempts/15 min',
+          body: {
+            name: 'John Operator',
+            email: 'john@pharmacy.com',
+            phone: '9876543210',
+            password: 'SecurePass@123',
+            role: 'pharmacy_owner'
+          },
+          response: {
+            success: true,
+            message: 'User created successfully',
+            token: 'eyJhbGciOiJIUzI1NiIs...'
+          }
+        },
+        {
+          method: 'POST',
+          path: '/auth/login',
+          description: 'Login with email and password',
+          rateLimit: '5 attempts/15 min',
+          body: {
+            email: 'john@pharmacy.com',
+            password: 'SecurePass@123'
+          },
+          response: {
+            success: true,
+            token: 'eyJhbGciOiJIUzI1NiIs...'
+          }
+        }
+      ]
+    },
+
+    pharmacy: {
+      name: '🏪 Pharmacy Management',
+      description: 'Pharmacy registration, profile, and management',
+      endpoints: [
+        {
+          method: 'POST',
+          path: '/pharmacy',
+          description: 'Register new pharmacy',
+          auth: true,
+          body: {
+            name: 'MediCare Pharmacy',
+            address: '123 Main St, Delhi',
+            city: 'Delhi',
+            state: 'Delhi',
+            phone: '9876543210',
+            license: 'DL12345',
+            operatingHours: { open: '09:00', close: '21:00' }
+          },
+          response: {
+            success: true,
+            pharmacyId: '507f1f77bcf86cd799439011',
+            message: 'Pharmacy registered successfully'
+          }
+        },
+        {
+          method: 'GET',
+          path: '/pharmacy/:id',
+          description: 'Get pharmacy details',
+          auth: true,
+          response: {
+            success: true,
+            pharmacy: {
+              id: '507f1f77bcf86cd799439011',
+              name: 'MediCare Pharmacy',
+              address: '123 Main St, Delhi',
+              rating: 4.5
+            }
+          }
+        }
+      ]
+    },
+
+    medicines: {
+      name: '💊 Medicine Management',
+      description: 'Medicine catalog and inventory',
+      endpoints: [
+        {
+          method: 'GET',
+          path: '/medicine',
+          description: 'Get all medicines with pagination',
+          auth: false,
+          queryParams: {
+            page: 1,
+            limit: 20,
+            category: 'antibiotics'
+          },
+          response: {
+            success: true,
+            medicines: [],
+            pagination: { total: 5000, page: 1, limit: 20 }
+          }
+        },
+        {
+          method: 'GET',
+          path: '/medicine/:id',
+          description: 'Get single medicine details',
+          auth: false,
+          response: {
+            success: true,
+            medicine: {
+              id: '507f1f77bcf86cd799439011',
+              name: 'Amoxicillin',
+              strength: '500mg',
+              category: 'antibiotics',
+              price: 45
+            }
+          }
+        }
+      ]
+    },
+
+    ai: {
+      name: '🤖 AI Demand Prediction',
+      description: 'ML-powered seasonal and geographic demand forecasting',
+      endpoints: [
+        {
+          method: 'POST',
+          path: '/ai/demand/create-prediction',
+          description: 'Create seasonal demand prediction',
+          auth: true,
+          rateLimit: '10/min (heavy operation)',
+          body: {
+            season: 'winter',
+            city: 'Delhi',
+            medicineCategories: ['cough-cold', 'fever', 'pain-relief']
+          },
+          response: {
+            success: true,
+            prediction: {
+              id: '507f1f77bcf86cd799439011',
+              accuracy: 87.5,
+              predictedItems: 25
+            }
+          }
+        },
+        {
+          method: 'GET',
+          path: '/ai/demand/area-analysis/:area',
+          description: 'Get area-specific stock analysis and recommendations',
+          auth: true,
+          response: {
+            success: true,
+            analysis: {
+              area: 'Delhi',
+              demandLevel: 'high',
+              recommendations: [
+                { medicine: 'Paracetamol', priority: 'critical', urgency: 'high' }
+              ]
+            }
+          }
+        },
+        {
+          method: 'GET',
+          path: '/ai/demand/seasonal/:season',
+          description: 'Seasonal demand pattern for medicines',
+          auth: true,
+          response: {
+            success: true,
+            seasonal: {
+              season: 'winter',
+              topMedicines: [
+                { name: 'Cough Syrup', demandIncrease: '45%' }
+              ]
+            }
+          }
+        }
+      ]
+    },
+
+    saas: {
+      name: '📊 B2B SaaS Dashboard',
+      description: 'Analytics, billing, and subscription management',
+      endpoints: [
+        {
+          method: 'GET',
+          path: '/saas/dashboard',
+          description: 'Get complete SaaS analytics dashboard',
+          auth: true,
+          response: {
+            success: true,
+            dashboard: {
+              pharmacies: 245,
+              activeUsers: 1230,
+              revenue: 1850000,
+              predictions: 1200
+            }
+          }
+        },
+        {
+          method: 'GET',
+          path: '/saas/analytics/pharmacies',
+          description: 'Pharmacy network analytics',
+          auth: true,
+          response: {
+            success: true,
+            analytics: {
+              total: 245,
+              active: 208,
+              byRegion: { north: 85, south: 60, east: 50, west: 50 }
+            }
+          }
+        },
+        {
+          method: 'POST',
+          path: '/saas/subscription',
+          description: 'Create subscription for pharmacy',
+          auth: true,
+          body: {
+            plan: 'premium',
+            pharmacyId: '507f1f77bcf86cd799439011',
+            duration: 12
+          },
+          response: {
+            success: true,
+            subscription: {
+              id: '507f1f77bcf86cd799439011',
+              plan: 'premium',
+              amount: 99999
+            }
+          }
+        },
+        {
+          method: 'POST',
+          path: '/saas/billing/invoice',
+          description: 'Generate invoice for subscription',
+          auth: true,
+          response: {
+            success: true,
+            invoice: {
+              number: 'INV-2024-001',
+              amount: 99999,
+              status: 'pending'
+            }
+          }
+        }
+      ]
+    },
+
+    prescription: {
+      name: '📋 Prescription Management',
+      description: 'Prescription submission and processing',
+      endpoints: [
+        {
+          method: 'POST',
+          path: '/prescription',
+          description: 'Submit new prescription',
+          auth: true,
+          body: {
+            patientName: 'Raj Kumar',
+            medicines: [
+              { name: 'Amoxicillin', dosage: '500mg', quantity: 10 }
+            ],
+            doctorInfo: 'Dr. Smith',
+            deliveryAddress: 'Delhi'
+          },
+          response: {
+            success: true,
+            prescriptionId: '507f1f77bcf86cd799439011',
+            status: 'pending_verification'
+          }
+        }
+      ]
+    },
+
+    delivery: {
+      name: '🚚 Delivery Management',
+      description: 'Order tracking and delivery coordination',
+      endpoints: [
+        {
+          method: 'GET',
+          path: '/delivery/orders',
+          description: 'Get user orders',
+          auth: true,
+          response: {
+            success: true,
+            orders: [
+              {
+                id: '507f1f77bcf86cd799439011',
+                status: 'in-transit',
+                estimatedDelivery: '2024-01-01T18:00:00Z'
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+
+  ratelimits: {
+    global: {
+      limit: 1000,
+      window: '15 minutes',
+      description: 'Per IP address'
+    },
+    auth: {
+      limit: 5,
+      window: '15 minutes',
+      description: 'Login/Register attempts per IP'
+    },
+    api: {
+      limit: 100,
+      window: '1 minute',
+      description: 'API calls per IP'
+    },
+    heavyOperations: {
+      limit: 10,
+      window: '1 minute',
+      description: 'AI predictions, analytics per IP'
+    }
+  },
+
+  caching: {
+    description: 'Automatic caching reduces database load',
+    strategies: {
+      medicines: { ttl: '30 minutes', hitRate: 'High' },
+      pharmacies: { ttl: '1 hour', hitRate: 'High' },
+      users: { ttl: '1 hour', hitRate: 'Medium' },
+      analytics: { ttl: '10 minutes', hitRate: 'High' },
+      predictions: { ttl: '2 hours', hitRate: 'Medium' }
+    }
+  },
+
+  errorCodes: {
+    400: 'Bad Request - Validation failed',
+    401: 'Unauthorized - Invalid/Missing token',
+    403: 'Forbidden - Insufficient permissions',
+    404: 'Not Found - Resource does not exist',
+    429: 'Too Many Requests - Rate limit exceeded',
+    500: 'Server Error',
+    503: 'Service Unavailable'
+  },
+
+  deploymentChecklist: [
+    'Environment variables configured (.env)',
+    'MongoDB connection URL set',
+    'JWT secret configured',
+    'CORS origins configured',
+    'Rate limits tuned for your scale',
+    'Caching TTL values optimized',
+    'Error logging destination configured',
+    'Email service configured (optional)',
+    'Payment gateway configured (optional)',
+    'S3/Cloud storage configured (optional)'
+  ],
+
+  quickStart: {
+    installation: [
+      'npm install',
+      'cd medinear-frontend && npm install',
+      'Create .env file with MONGO_URI and JWT_SECRET',
+      'npm start (from root directory)'
+    ],
+    firstRequest: {
+      command: 'curl http://localhost:5001/api/health',
+      expected: '{success:true, status:"healthy", timestamp:"..."}'
+    },
+    testPredictions: {
+      command: 'bash test-ai-quick.sh',
+      expected: '26/26 tests PASS'
+    }
+  }
+};
+
+// Generate and display documentation
+if (require.main === module) {
+  console.log(`
+╔════════════════════════════════════════════════════╗
+║  ${apiDocumentation.title}
+║  v${apiDocumentation.version}
+╚════════════════════════════════════════════════════╝
+`);
+
+  console.log('📚 API DOCUMENTATION\n');
+  console.log('Base URL:', apiDocumentation.baseUrl);
+  console.log(`Last Updated: ${apiDocumentation.lastUpdated}\n`);
+
+  console.log('🔐 SECURITY\n');
+  console.log('Authentication:', apiDocumentation.security.authentication);
+  console.log('Rate Limit:', apiDocumentation.security.rateLimit);
+  console.log('Auth Rate Limit:', apiDocumentation.security.authRateLimit);
+  console.log('Validation:', apiDocumentation.security.validation);
+  console.log('');
+
+  console.log('📊 RATE LIMITS\n');
+  Object.entries(apiDocumentation.ratelimits).forEach(([key, value]) => {
+    console.log(`${key}: ${value.limit} / ${value.window} (${value.description})`);
+  });
+  console.log('');
+
+  console.log('⚡ CACHING STRATEGY\n');
+  Object.entries(apiDocumentation.caching.strategies).forEach(([key, value]) => {
+    console.log(`${key}: ${value.ttl} TTL | Hit rate: ${value.hitRate}`);
+  });
+  console.log('');
+
+  console.log('🚀 QUICK START\n');
+  apiDocumentation.quickStart.installation.forEach((step, i) => {
+    console.log(`${i + 1}. ${step}`);
+  });
+  console.log('');
+
+  // Export as JSON for reference
+  const docPath = path.join(__dirname, 'API_DOCUMENTATION.json');
+  fs.writeFileSync(docPath, JSON.stringify(apiDocumentation, null, 2));
+  console.log(`✅ Full API documentation saved to: API_DOCUMENTATION.json`);
+  console.log('');
+}
+
+module.exports = apiDocumentation;
