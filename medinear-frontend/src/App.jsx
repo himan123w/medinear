@@ -30,10 +30,6 @@ import BottomNavigation from './components/BottomNavigation';
 import ToastContainer from './components/ToastContainer';
 import './App.css';
 import './theme.css';
-import './styles/modern-animations.css';
-import './styles/modern-forms.css';
-import './styles/modern-cards.css';
-import './styles/modern-responsive.css';
 
 // Debug component
 function DebugTest() {
