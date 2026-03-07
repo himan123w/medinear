@@ -431,8 +431,18 @@ function AdminDashboard() {
   const addMedicine = async (e) => {
     e.preventDefault();
     try {
-      if (!newMedicine.name || !newMedicine.price || !newMedicine.pharmacy) {
+      if (!newMedicine.name || !newMedicine.price) {
         showToast?.('Please fill in all required fields', 'error');
+        return;
+      }
+
+      // Determine pharmacy ID - use logged in pharmacy user's ID or selected pharmacy
+      const pharmacyId = user?.role === 'pharmacy' 
+        ? (user?.pharmacyId || user?._id)
+        : newMedicine.pharmacy;
+
+      if (!pharmacyId) {
+        showToast?.('Pharmacy is required', 'error');
         return;
       }
 
@@ -440,6 +450,7 @@ function AdminDashboard() {
         `${API_BASE}/admin/medicines`,
         {
           ...newMedicine,
+          pharmacy: pharmacyId,
           price: parseFloat(newMedicine.price),
           stock: parseInt(newMedicine.stock) || 0,
           stockAlert: parseInt(newMedicine.stockAlert) || 10
@@ -460,7 +471,7 @@ function AdminDashboard() {
       setShowAddMedicineForm(false);
       setMedicineCount(medicineCount + 1);
     } catch (error) {
-      showToast?.('Failed to add medicine', 'error');
+      showToast?.(error?.response?.data?.message || 'Failed to add medicine', 'error');
     }
   };
 
@@ -974,16 +985,35 @@ function AdminDashboard() {
                         onChange={(e) => setNewMedicine({...newMedicine, category: e.target.value})}
                       />
                     </div>
-                    <div>
-                      <label>Pharmacy ID *</label>
-                      <input 
-                        type="text" 
-                        placeholder="Pharmacy ObjectId"
-                        value={newMedicine.pharmacy}
-                        onChange={(e) => setNewMedicine({...newMedicine, pharmacy: e.target.value})}
-                        required
-                      />
-                    </div>
+                    {user?.role !== 'pharmacy' && (
+                      <div>
+                        <label>Pharmacy *</label>
+                        <select
+                          value={newMedicine.pharmacy}
+                          onChange={(e) => setNewMedicine({...newMedicine, pharmacy: e.target.value})}
+                          required
+                        >
+                          <option value="">Select Pharmacy</option>
+                          {pharmacies.map(p => (
+                            <option key={p._id} value={p._id}>
+                              {p.name} - {p.area || p.city}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                    {user?.role === 'pharmacy' && (
+                      <div>
+                        <label>Pharmacy</label>
+                        <input 
+                          type="text" 
+                          value={user?.name || 'Your Pharmacy'}
+                          disabled
+                          style={{ backgroundColor: '#f0f0f0', cursor: 'not-allowed' }}
+                        />
+                        <small style={{ color: '#666', fontSize: '0.85em' }}>Medicines will be added to your pharmacy</small>
+                      </div>
+                    )}
                   </div>
                   <button type="submit" className="btn-success full-width-btn">
                     Add Medicine
