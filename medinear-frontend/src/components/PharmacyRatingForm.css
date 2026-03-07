@@ -1,0 +1,300 @@
+/* Pharmacy Rating Form Styles */
+
+.pharmacy-rating-form {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.toggle-form-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.toggle-form-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.toggle-form-btn:active {
+  transform: translateY(0);
+}
+
+.rating-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-top: 1rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.rating-form h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 22px;
+}
+
+.form-subtitle {
+  color: #666;
+  font-size: 14px;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Star Rating Wrapper */
+.star-rating-wrapper {
+  margin-bottom: 2rem;
+}
+
+.rating-label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 15px;
+}
+
+.rating-description {
+  display: block;
+  font-weight: 400;
+  color: #777;
+  font-size: 13px;
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  color: #ddd;
+  transition: all 0.2s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.star:hover,
+.star.filled {
+  color: #ffc107;
+  transform: scale(1.15);
+}
+
+.star:active {
+  transform: scale(0.95);
+}
+
+.rating-value {
+  margin-left: 1rem;
+  color: #667eea;
+  font-weight: 600;
+  font-size: 14px;
+  min-width: 70px;
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 15px;
+}
+
+.comment-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+.comment-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 12px;
+  color: #999;
+  margin-top: 0.5rem;
+}
+
+/* Messages */
+.error-message {
+  background: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 14px;
+  border-left: 4px solid #c33;
+}
+
+.success-message {
+  background: #efe;
+  color: #3c3;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 14px;
+  border-left: 4px solid #3c3;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  flex: 1;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background: #f0f0f0;
+  color: #333;
+  min-width: 120px;
+}
+
+.cancel-btn:hover {
+  background: #e0e0e0;
+}
+
+/* Last Rated Info */
+.last-rated-info {
+  font-size: 12px;
+  color: #999;
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+/* User Rating Badge */
+.user-rating-badge {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 1rem;
+  border: 2px solid #667eea;
+  animation: slideIn 0.3s ease;
+}
+
+.badge-title {
+  margin: 0;
+  color: #666;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.badge-rating .overall {
+  font-size: 28px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.badge-rating .star {
+  font-size: 24px;
+  color: #ffc107;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .rating-form {
+    padding: 1.5rem;
+  }
+
+  .star {
+    font-size: 28px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-btn {
+    min-width: auto;
+  }
+
+  .badge-rating .overall {
+    font-size: 24px;
+  }
+
+  .badge-rating .star {
+    font-size: 20px;
+  }
+}

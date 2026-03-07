@@ -1,0 +1,68 @@
+.animated-card {
+  position: relative;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: pointer;
+  will-change: transform, box-shadow;
+}
+
+.animated-card--subtle {
+  background: var(--bg-primary, #ffffff);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+}
+
+.animated-card--subtle:hover {
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.animated-card--medium {
+  background: var(--bg-primary, #ffffff);
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+}
+
+.animated-card--medium:hover {
+  border-color: rgba(102, 126, 234, 0.4);
+}
+
+.animated-card--strong {
+  background: var(--bg-primary, #ffffff);
+  border: 2px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  padding: 16px;
+}
+
+.animated-card--strong:hover {
+  border-color: rgba(102, 126, 234, 0.5);
+}
+
+/* Dark Mode */
+[data-theme='dark'] .animated-card--subtle,
+[data-theme='dark'] .animated-card--medium,
+[data-theme='dark'] .animated-card--strong {
+  background: var(--bg-primary, #1a1a2e);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .animated-card--subtle:hover,
+[data-theme='dark'] .animated-card--medium:hover,
+[data-theme='dark'] .animated-card--strong:hover {
+  background: var(--bg-secondary, #16213e);
+  border-color: rgba(125, 142, 254, 0.5);
+}
+
+/* Interactive States */
+.animated-card:active {
+  opacity: 0.95;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .animated-card--strong {
+    padding: 12px;
+  }
+}
+
+/* Accessibility */
+.animated-card:focus-visible {
+  outline: 2px solid rgba(102, 126, 234, 0.6);
+  outline-offset: 2px;
+}

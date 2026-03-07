@@ -1,0 +1,419 @@
+/* ================================== */
+/* MICRO-INTERACTIONS & ANIMATIONS    */
+/* Premium Subtle Animations          */
+/* ================================== */
+
+:root {
+  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --shadow-glow-primary: 0 0 20px rgba(102, 126, 234, 0.4);
+  --shadow-glow-success: 0 0 20px rgba(76, 175, 80, 0.4);
+  --shadow-glow-danger: 0 0 20px rgba(244, 67, 54, 0.4);
+}
+
+/* ================================== */
+/* BUTTON HOVER GLOW                  */
+/* ================================== */
+
+.btn,
+button,
+.button-primary,
+.btn-primary,
+.reserve-btn,
+.search-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s var(--transition-smooth);
+}
+
+.btn:hover:not(:disabled),
+button:hover:not(:disabled),
+.button-primary:hover:not(:disabled),
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35), 
+              0 0 15px rgba(102, 126, 234, 0.2);
+}
+
+.btn:active:not(:disabled),
+button:active:not(:disabled) {
+  transform: translateY(0);
+  transition: all 0.1s var(--transition-smooth);
+}
+
+/* Success Button Glow */
+.btn-success:hover:not(:disabled),
+.button-success:hover:not(:disabled) {
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35),
+              0 0 15px rgba(76, 175, 80, 0.2);
+}
+
+/* Danger Button Glow */
+.btn-danger:hover:not(:disabled),
+.button-danger:hover:not(:disabled) {
+  box-shadow: 0 8px 20px rgba(244, 67, 54, 0.35),
+              0 0 15px rgba(244, 67, 54, 0.2);
+}
+
+/* Shimmer Effect on Hover */
+.btn::before,
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s var(--transition-smooth);
+}
+
+.btn:hover::before,
+button:hover::before {
+  left: 100%;
+}
+
+/* ================================== */
+/* CARD LIFT ON HOVER                 */
+/* ================================== */
+
+.card,
+.pharmacy-card,
+.medicine-card,
+.result-card,
+.dashboard-card,
+.stat-card,
+.delivery-card,
+.prescription-card {
+  transition: all 0.3s var(--transition-smooth);
+  cursor: pointer;
+}
+
+.card:hover,
+.pharmacy-card:hover,
+.medicine-card:hover,
+.result-card:hover,
+.dashboard-card:hover,
+.stat-card:hover,
+.delivery-card:hover,
+.prescription-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12),
+              0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Subtle scale on cards */
+.card:active,
+.pharmacy-card:active,
+.medicine-card:active {
+  transform: translateY(-4px) scale(0.99);
+  transition: all 0.1s var(--transition-smooth);
+}
+
+/* ================================== */
+/* SMOOTH LOADING SKELETON            */
+/* ================================== */
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.skeleton,
+.skeleton-line,
+.skeleton-text,
+.skeleton-title,
+.skeleton-image {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #f8f8f8 20%,
+    #f0f0f0 40%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 6px;
+}
+
+.loading-shimmer {
+  animation: pulse-soft 2s infinite ease-in-out;
+}
+
+/* ================================== */
+/* FADE-IN RESULTS                    */
+/* ================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Apply fade-in to results */
+.fade-in {
+  animation: fadeIn 0.4s var(--transition-smooth);
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s var(--transition-smooth);
+}
+
+.fade-in-scale {
+  animation: fadeInScale 0.4s var(--transition-smooth);
+}
+
+/* Staggered fade-in for lists */
+.fade-in-stagger > * {
+  animation: fadeIn 0.4s var(--transition-smooth);
+}
+
+.fade-in-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.fade-in-stagger > *:nth-child(2) { animation-delay: 0.1s; }
+.fade-in-stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.fade-in-stagger > *:nth-child(4) { animation-delay: 0.2s; }
+.fade-in-stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.fade-in-stagger > *:nth-child(6) { animation-delay: 0.3s; }
+.fade-in-stagger > *:nth-child(7) { animation-delay: 0.35s; }
+.fade-in-stagger > *:nth-child(8) { animation-delay: 0.4s; }
+
+/* ================================== */
+/* INPUT FOCUS GLOW                   */
+/* ================================== */
+
+input:focus,
+textarea:focus,
+select:focus,
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color, #667eea);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1),
+              0 0 12px rgba(102, 126, 234, 0.15);
+  transition: all 0.3s var(--transition-smooth);
+}
+
+/* ================================== */
+/* RIPPLE EFFECT                      */
+/* ================================== */
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.ripple-effect:active::after {
+  width: 200px;
+  height: 200px;
+  animation: ripple 0.6s ease-out;
+}
+
+/* ================================== */
+/* SMOOTH TRANSITIONS                 */
+/* ================================== */
+
+.smooth-transition {
+  transition: all 0.3s var(--transition-smooth);
+}
+
+.smooth-bounce {
+  transition: all 0.4s var(--transition-bounce);
+}
+
+/* ================================== */
+/* HOVER BRIGHTNESS                   */
+/* ================================== */
+
+.hover-brighten {
+  transition: filter 0.3s var(--transition-smooth);
+}
+
+.hover-brighten:hover {
+  filter: brightness(1.1);
+}
+
+/* ================================== */
+/* LOADING SPINNER                    */
+/* ================================== */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* ================================== */
+/* SLIDE ANIMATIONS                   */
+/* ================================== */
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.4s var(--transition-smooth);
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.4s var(--transition-smooth);
+}
+
+/* ================================== */
+/* SUBTLE SCALE ON HOVER              */
+/* ================================== */
+
+.hover-scale {
+  transition: transform 0.3s var(--transition-smooth);
+}
+
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+/* ================================== */
+/* FOCUS VISIBLE (ACCESSIBILITY)      */
+/* ================================== */
+
+*:focus-visible {
+  outline: 2px solid var(--primary-color, #667eea);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ================================== */
+/* SMOOTH OPACITY TRANSITIONS         */
+/* ================================== */
+
+.fade-opacity {
+  transition: opacity 0.3s var(--transition-smooth);
+}
+
+.fade-opacity:hover {
+  opacity: 0.8;
+}
+
+/* ================================== */
+/* BADGE PULSE                        */
+/* ================================== */
+
+@keyframes badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 6px rgba(102, 126, 234, 0);
+  }
+}
+
+.badge-pulse {
+  animation: badge-pulse 2s infinite;
+}
+
+/* ================================== */
+/* REDUCE MOTION (ACCESSIBILITY)      */
+/* ================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

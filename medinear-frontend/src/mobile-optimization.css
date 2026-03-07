@@ -1,0 +1,674 @@
+/* ========================================= */
+/* MOBILE OPTIMIZATION                       */
+/* Critical for Mobile-First User Experience */
+/* ========================================= */
+
+/* 
+ * Design Principles:
+ * - All touch targets minimum 44x44px (Apple) / 48x48px (Android)
+ * - Large, easy-to-read text
+ * - Full-width buttons for easy tapping
+ * - Proper spacing for fat fingers
+ * - Optimized for one-handed use
+ */
+
+:root {
+  --mobile-touch-target: 48px;
+  --mobile-padding: 16px;
+  --mobile-font-base: 16px;
+  --mobile-font-large: 18px;
+}
+
+/* ========================================= */
+/* GLOBAL MOBILE OPTIMIZATIONS              */
+/* ========================================= */
+
+/* Ensure no horizontal scroll */
+body {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Better tap highlighting */
+* {
+  -webkit-tap-highlight-color: rgba(102, 126, 234, 0.2);
+  -webkit-touch-callout: none;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ========================================= */
+/* MOBILE BREAKPOINTS                       */
+/* ========================================= */
+
+/* Mobile Portrait (< 480px) */
+@media (max-width: 480px) {
+  
+  /* === BUTTONS === */
+  .btn,
+  button,
+  .reserve-button,
+  .search-btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-success,
+  .btn-danger {
+    min-height: var(--mobile-touch-target);
+    padding: 14px 20px;
+    font-size: var(--mobile-font-base);
+    width: 100%;
+    touch-action: manipulation; /* Prevents zoom on double tap */
+  }
+
+  /* Reserve Button - Full width always */
+  .reserve-button,
+  .reserve-btn,
+  .confirm-button,
+  .cancel-button {
+    width: 100%;
+    min-height: 52px;
+    font-size: 18px;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* Button groups - stack vertically */
+  .btn-group,
+  .button-group,
+  .action-buttons,
+  .medicine-actions,
+  .card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .btn-group .btn,
+  .button-group .btn,
+  .action-buttons .btn {
+    width: 100%;
+    margin: 0;
+  }
+
+  /* === SEARCH BAR === */
+  .search-input,
+  .search-box input,
+  input[type="search"],
+  input[type="text"].search {
+    min-height: 52px;
+    padding: 16px 20px;
+    font-size: 18px;
+    border-radius: 12px;
+    width: 100%;
+  }
+
+  .search-box {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .search-box button {
+    width: 100%;
+    min-height: 52px;
+    font-size: 18px;
+  }
+
+  .search-form {
+    width: 100%;
+    padding: 0;
+  }
+
+  .search-input-group {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  /* === CARDS === */
+  .medicines-grid,
+  .pharmacies-grid,
+  .results-grid,
+  .grid,
+  .cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  .medicine-card,
+  .pharmacy-card,
+  .result-card,
+  .card {
+    margin: 0;
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  /* Card actions - full width */
+  .medicine-card .btn,
+  .pharmacy-card .btn,
+  .card .btn {
+    width: 100%;
+    min-height: var(--mobile-touch-target);
+  }
+
+  /* === FORMS === */
+  input,
+  textarea,
+  select {
+    min-height: var(--mobile-touch-target);
+    padding: 14px 16px;
+    font-size: var(--mobile-font-base);
+    border-radius: 10px;
+  }
+
+  textarea {
+    min-height: 120px;
+  }
+
+  /* Labels - larger text */
+  label {
+    font-size: var(--mobile-font-base);
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 600;
+  }
+
+  /* === TYPOGRAPHY === */
+  h1 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 24px;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 20px;
+    line-height: 1.3;
+  }
+
+  h4 {
+    font-size: 18px;
+  }
+
+  p {
+    font-size: var(--mobile-font-base);
+    line-height: 1.6;
+  }
+
+  /* === NAVIGATION === */
+  .nav-buttons,
+  .tab-btn,
+  .filter-btn {
+    min-height: 44px;
+    padding: 12px 16px;
+    font-size: 15px;
+    touch-action: manipulation;
+  }
+
+  .tabs {
+    gap: 8px;
+    padding: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* === MODALS === */
+  .modal,
+  .reserve-modal,
+  .dialog {
+    width: 96%;
+    max-width: 100%;
+    margin: 8px;
+    border-radius: 20px;
+  }
+
+  .modal-header,
+  .reserve-modal-header {
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+  }
+
+  .modal-body,
+  .reserve-modal-body {
+    padding: 20px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+
+  .modal-footer,
+  .reserve-modal-footer {
+    padding: 20px;
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid #eee;
+  }
+
+  /* === STATS CARDS === */
+  .stats-grid,
+  .dashboard-stats {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 20px;
+    min-height: 100px;
+  }
+
+  .stat-card h3 {
+    font-size: 32px;
+  }
+
+  .stat-card p {
+    font-size: 16px;
+  }
+
+  /* === LISTS === */
+  .list-item,
+  .medicine-item,
+  .pharmacy-item {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* === IMAGES === */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* === SPACING === */
+  .container,
+  .section {
+    padding: 16px;
+  }
+
+  .page-header {
+    padding: 20px 16px;
+  }
+
+  .page-content {
+    padding: 16px;
+  }
+
+  /* === QUANTITY CONTROLS === */
+  .qty-btn,
+  .quantity-btn {
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 24px;
+    border-radius: 12px;
+  }
+
+  .qty-input,
+  .quantity-input {
+    min-height: 48px;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  /* === FILTER BUTTONS === */
+  .pharmacy-filter-buttons,
+  .filter-bar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+
+  .pharmacy-filter-buttons .filter-btn {
+    width: 100%;
+    padding: 12px 8px;
+    font-size: 14px;
+    min-height: 44px;
+  }
+
+  /* === FLOATING ACTION BUTTON === */
+  .fab,
+  .floating-button {
+    width: 60px;
+    height: 60px;
+    bottom: 20px;
+    right: 20px;
+    font-size: 24px;
+  }
+
+  /* === NOTIFICATIONS === */
+  .notification,
+  .toast {
+    left: 8px;
+    right: 8px;
+    max-width: none;
+    font-size: 15px;
+    padding: 16px;
+  }
+}
+
+/* ========================================= */
+/* MOBILE LANDSCAPE (481px - 767px)         */
+/* ========================================= */
+
+@media (min-width: 481px) and (max-width: 767px) {
+  
+  .medicines-grid,
+  .pharmacies-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .btn,
+  button {
+    min-height: 44px;
+    padding: 12px 20px;
+  }
+
+  .search-input,
+  .search-box input {
+    min-height: 48px;
+    font-size: 17px;
+  }
+}
+
+/* ========================================= */
+/* TABLET (768px - 1023px)                  */
+/* ========================================= */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  
+  .medicines-grid,
+  .pharmacies-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .search-input-group {
+    max-width: 700px;
+  }
+
+  .container {
+    padding: 24px;
+  }
+}
+
+/* ========================================= */
+/* TOUCH DEVICE OPTIMIZATIONS               */
+/* ========================================= */
+
+@media (hover: none) and (pointer: coarse) {
+  
+  /* Larger touch targets for touch devices */
+  button,
+  a,
+  .btn,
+  .tab-btn,
+  .filter-btn {
+    min-height: 48px;
+    padding: 14px 20px;
+  }
+
+  /* Better hover states for touch */
+  .card:active,
+  .medicine-card:active,
+  .pharmacy-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  button:active,
+  .btn:active {
+    transform: scale(0.96);
+  }
+
+  /* Disable hover effects on touch devices */
+  .card:hover,
+  .medicine-card:hover,
+  .pharmacy-card:hover {
+    transform: none;
+  }
+}
+
+/* ========================================= */
+/* SAFE AREA (iPhone X, etc.)               */
+/* ========================================= */
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  .modal-footer,
+  .reserve-modal-footer,
+  .bottom-bar,
+  .floating-button {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+
+  .header,
+  .top-bar {
+    padding-top: calc(16px + env(safe-area-inset-top));
+  }
+}
+
+/* ========================================= */
+/* ACCESSIBILITY - LARGER TEXT              */
+/* ========================================= */
+
+@media (max-width: 480px) {
+  /* Ensure minimum text sizes for readability */
+  .small-text,
+  .text-sm {
+    font-size: 14px !important;
+  }
+
+  .tiny-text {
+    font-size: 12px !important;
+  }
+
+  /* Better link tap targets */
+  a {
+    padding: 4px 0;
+    display: inline-block;
+  }
+
+  /* Checkbox and radio - larger */
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-width: 24px;
+    min-height: 24px;
+  }
+}
+
+/* ========================================= */
+/* PERFORMANCE OPTIMIZATIONS                */
+/* ========================================= */
+
+@media (max-width: 767px) {
+  /* Reduce animations on mobile for performance */
+  .reduce-motion {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.2s !important;
+  }
+
+  /* Optimize images */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
+
+  /* Prevent layout shift */
+  .card,
+  .medicine-card,
+  .pharmacy-card {
+    min-height: auto;
+  }
+}
+
+/* ========================================= */
+/* UTILITY CLASSES FOR MOBILE               */
+/* ========================================= */
+
+/* Hide on mobile */
+.hide-mobile {
+  display: none !important;
+}
+
+/* Show only on mobile */
+.show-mobile {
+  display: block !important;
+}
+
+@media (min-width: 768px) {
+  .hide-mobile {
+    display: block !important;
+  }
+
+  .show-mobile {
+    display: none !important;
+  }
+}
+
+/* Full width on mobile */
+@media (max-width: 767px) {
+  .mobile-full-width {
+    width: 100% !important;
+  }
+
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+
+  .mobile-center {
+    text-align: center !important;
+  }
+}
+
+/* ========================================= */
+/* SPECIFIC COMPONENT OVERRIDES             */
+/* ========================================= */
+
+@media (max-width: 480px) {
+  
+  /* Home page search */
+  .home-container .search-input {
+    font-size: 18px;
+    padding: 18px 20px;
+  }
+
+  /* Pharmacy detail */
+  .pharmacy-detail-container {
+    padding: 16px;
+  }
+
+  /* Reservation timer */
+  .reservation-timer {
+    padding: 16px;
+  }
+
+  /* Delivery tracking */
+  .delivery-tracking {
+    padding: 16px;
+  }
+
+  /* Admin dashboard */
+  .admin-dashboard {
+    padding: 16px;
+    padding-top: 80px;
+  }
+
+  /* Dashboard */
+  .dashboard-container {
+    padding: 16px;
+  }
+
+  /* Medicine alternatives */
+  .alternatives-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ========================================= */
+/* CRITICAL MOBILE FIXES                    */
+/* ========================================= */
+
+@media (max-width: 767px) {
+  
+  /* Prevent text overflow */
+  * {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Better select dropdowns */
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+  }
+
+  /* Better table display */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Sticky headers */
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  /* Bottom navigation spacing - add padding to avoid fixed nav overlap */
+  main,
+  .main-content,
+  .content,
+  .page-container,
+  .home-container,
+  .dashboard-container {
+    padding-bottom: 80px;
+  }
+
+  /* Routes wrapper spacing */
+  body > * > * {
+    padding-bottom: 80px;
+  }
+
+  /* Safe area support for notched devices */
+  @supports (padding: max(0px)) {
+    main,
+    .main-content,
+    .content,
+    .page-container,
+    .home-container,
+    .dashboard-container {
+      padding-bottom: calc(80px + max(0px, env(safe-area-inset-bottom)));
+    }
+  }
+}
+
+/* ========================================= */
+/* PRINT STYLES (Mobile)                    */
+/* ========================================= */
+
+@media print {
+  .btn,
+  button,
+  .hide-print {
+    display: none !important;
+  }
+
+  .print-full-width {
+    width: 100% !important;
+  }
+}

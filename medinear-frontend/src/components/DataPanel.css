@@ -1,0 +1,218 @@
+/* ================================== */
+/* DATA PANEL STYLING */
+/* ================================== */
+
+.data-panel {
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Background Variants */
+.data-panel.gradient {
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+}
+
+.data-panel.solid {
+  background: white;
+}
+
+.data-panel.light {
+  background: #fafbff;
+}
+
+/* Hover Effect */
+.data-panel:hover {
+  border-color: #667eea;
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.15);
+  transform: translateY(-4px);
+}
+
+/* Size Variants */
+.data-panel.small {
+  padding: 16px;
+}
+
+.data-panel.large {
+  padding: 32px;
+}
+
+/* Header */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+/* Trend Badge */
+.trend-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.trend-badge.positive {
+  background: rgba(81, 207, 102, 0.1);
+  color: #27ae60;
+  border: 1px solid rgba(81, 207, 102, 0.2);
+}
+
+.trend-badge.negative {
+  background: rgba(255, 107, 107, 0.1);
+  color: #e74c3c;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+/* Main Counter */
+.panel-main {
+  margin: 8px 0;
+}
+
+/* Progress Section */
+.panel-progress {
+  padding: 12px 0;
+  border-top: 1px solid rgba(102, 126, 234, 0.1);
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+/* Metrics Grid */
+.panel-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(102, 126, 234, 0.08);
+}
+
+.metric-label {
+  font-size: 11px;
+  color: #999;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.metric-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+/* Dark Mode */
+[data-theme="dark"] .data-panel {
+  background: rgba(26, 26, 26, 0.6);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="dark"] .data-panel.solid,
+[data-theme="dark"] .data-panel.light {
+  background: rgba(26, 26, 26, 0.6);
+}
+
+[data-theme="dark"] .data-panel:hover {
+  border-color: #667eea;
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+}
+
+[data-theme="dark"] .panel-header h3 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .trend-badge.positive {
+  background: rgba(81, 207, 102, 0.15);
+  color: #80d77c;
+  border-color: rgba(81, 207, 102, 0.25);
+}
+
+[data-theme="dark"] .trend-badge.negative {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff8686;
+  border-color: rgba(255, 107, 107, 0.25);
+}
+
+[data-theme="dark"] .panel-progress {
+  border-top-color: var(--border-color);
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .metric-item {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .metric-label {
+  color: var(--text-tertiary);
+}
+
+[data-theme="dark"] .metric-value {
+  color: #a0aef7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .data-panel {
+    padding: 18px;
+    gap: 14px;
+  }
+
+  .panel-header h3 {
+    font-size: 15px;
+  }
+
+  .panel-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .data-panel {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .data-panel.small {
+    padding: 12px;
+  }
+
+  .panel-header h3 {
+    font-size: 14px;
+  }
+
+  .metric-item {
+    padding: 8px;
+  }
+
+  .metric-label {
+    font-size: 10px;
+  }
+
+  .metric-value {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,161 @@
+/* Install Prompt Button */
+
+.install-prompt {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(150px) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+  }
+}
+
+.install-prompt-content {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  max-width: 340px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  animation: pulse 2s ease-in-out infinite;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.install-prompt-icon {
+  font-size: 40px;
+  flex-shrink: 0;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.install-prompt-text {
+  flex: 1;
+  padding-top: 4px;
+}
+
+.install-prompt-text h3 {
+  margin: 0 0 6px 0;
+  font-size: 17px;
+  color: #222;
+  font-weight: 700;
+}
+
+.install-prompt-text p {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.install-prompt-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 110px;
+}
+
+.install-btn {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.install-confirm {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.install-confirm:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.install-confirm:active {
+  transform: translateY(-1px);
+}
+
+.install-cancel {
+  background: #f5f5f5;
+  color: #666;
+  border: 1px solid #e0e0e0;
+}
+
+.install-cancel:hover {
+  background: #efefef;
+  border-color: #d0d0d0;
+}
+
+.install-cancel:active {
+  background: #e8e8e8;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .install-prompt {
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+  }
+
+  .install-prompt-content {
+    max-width: none;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .install-prompt-icon {
+    font-size: 36px;
+  }
+
+  .install-prompt-text h3 {
+    font-size: 16px;
+  }
+
+  .install-prompt-buttons {
+    flex-direction: row;
+    min-width: auto;
+    gap: 8px;
+  }
+
+  .install-btn {
+    flex: 1;
+    padding: 11px 12px;
+    font-size: 13px;
+  }
+}
+

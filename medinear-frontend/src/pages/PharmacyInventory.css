@@ -1,0 +1,3 @@
+.pharmacy-inventory{max-width:1000px;margin:28px auto;background:#fff;padding:20px;border-radius:10px}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.item-card{padding:12px;border:1px solid #eee;border-radius:8px}

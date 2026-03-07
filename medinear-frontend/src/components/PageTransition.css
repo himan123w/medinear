@@ -1,0 +1,34 @@
+.page-transition {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Optional: Add background transitions for page changes */
+.page-transition {
+  animation: pageLoad 0.4s ease-out;
+}
+
+@keyframes pageLoad {
+  from {
+    background: rgba(255, 255, 255, 0);
+  }
+  to {
+    background: rgba(255, 255, 255, 0);
+  }
+}
+
+/* Scroll to top on page transition */
+.page-transition {
+  scroll-behavior: smooth;
+}
+
+/* For pages with specific styling during transitions */
+.page-transition.loading {
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+/* Ensure smooth transitions in dark mode */
+[data-theme='dark'] .page-transition {
+  background: transparent;
+}

@@ -1,0 +1,140 @@
+/* Pharmacy Detail Page Styles */
+
+.pharmacy-detail-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Pharmacy Header */
+.pharmacy-header {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.pharmacy-info h1 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 28px;
+}
+
+.pharmacy-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.pharmacy-meta p {
+  margin: 0;
+  color: #666;
+  font-size: 15px;
+}
+
+.address {
+  flex-basis: 100%;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge.open24x7 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.badge.delivery {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Ratings Section */
+.ratings-section {
+  background: transparent;
+}
+
+.ratings-section h2 {
+  margin: 0 0 2rem 0;
+  color: white;
+  font-size: 24px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading & Error States */
+.loading,
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  background: white;
+  border-radius: 12px;
+  font-size: 18px;
+  color: #666;
+}
+
+.error {
+  color: #c33;
+  background: #fee;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pharmacy-detail-page {
+    padding: 1rem 0;
+  }
+
+  .pharmacy-header {
+    padding: 1.5rem;
+  }
+
+  .pharmacy-info h1 {
+    font-size: 22px;
+  }
+
+  .pharmacy-meta {
+    gap: 1rem;
+  }
+
+  .ratings-section h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+
+  .pharmacy-header {
+    padding: 1rem;
+  }
+
+  .pharmacy-info h1 {
+    font-size: 18px;
+  }
+
+  .pharmacy-meta {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .address {
+    flex-basis: auto;
+  }
+}

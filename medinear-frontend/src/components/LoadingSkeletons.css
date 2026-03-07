@@ -1,0 +1,175 @@
+.medicine-skeleton,
+.card-skeleton,
+.skeleton-row,
+.skeleton-card {
+  background: var(--bg-secondary, #fafafa);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--spacing-md, 16px);
+  margin-bottom: var(--spacing-md, 16px);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.skeleton-line {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #f8f8f8 20%,
+    #ffffff 40%,
+    #f8f8f8 60%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2.5s infinite ease-in-out;
+  height: 1rem;
+  border-radius: var(--radius-sm, 4px);
+  margin-bottom: var(--spacing-sm, 8px);
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-title {
+  height: 1.5rem;
+  width: 70%;
+  margin-bottom: var(--spacing-md);
+}
+
+.skeleton-text {
+  height: 1rem;
+  width: 90%;
+}
+
+.skeleton-text.short {
+  width: 60%;
+}
+
+.skeleton-price {
+  height: 1.25rem;
+  width: 40%;
+  margin-top: var(--spacing-md);
+}
+
+/* Image Skeleton */
+.skeleton-image {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #f8f8f8 20%,
+    #ffffff 40%,
+    #f8f8f8 60%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2.5s infinite ease-in-out;
+  height: 200px;
+  border-radius: var(--radius-md, 8px);
+  margin-bottom: var(--spacing-md, 16px);
+}
+
+.skeleton-content {
+  padding: var(--spacing-md) 0;
+}
+
+/* List Skeleton */
+.list-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.skeleton-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+}
+
+/* Dashboard Skeleton */
+.dashboard-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.skeleton-header {
+  padding: var(--spacing-lg);
+}
+
+.skeleton-header .skeleton-title {
+  height: 2rem;
+  width: 40%;
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.skeleton-card {
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.skeleton-card .skeleton-title {
+  height: 1.5rem;
+  margin-bottom: var(--spacing-md);
+}
+
+/* Form Skeleton */
+.form-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+}
+
+.form-skeleton .skeleton-title {
+  height: 1.5rem;
+  width: 60%;
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-skeleton .skeleton-line {
+  height: 2.5rem;
+}
+
+@media (max-width: 640px) {
+  .skeleton-row {
+    grid-template-columns: 1fr;
+  }
+
+  .skeleton-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skeleton-line {
+    height: 0.9rem;
+  }
+}

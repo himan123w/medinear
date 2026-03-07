@@ -1,0 +1,358 @@
+/* Personalization Banner Styles */
+
+.personalization-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 24px;
+  color: white;
+  box-shadow: 0 12px 48px rgba(102, 126, 234, 0.25);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Background decoration */
+.personalization-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.banner-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+/* Greeting Section */
+.greeting-section {
+  flex: 1;
+  min-width: 250px;
+}
+
+.greeting-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.time-emoji {
+  font-size: 48px;
+  line-height: 1;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.greeting-message {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.greeting-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.user-name {
+  font-weight: 800;
+  background: linear-gradient(135deg, #FFD200 0%, #FFA500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wave-emoji {
+  display: inline-block;
+  animation: wave 1s ease-in-out infinite;
+  transform-origin: bottom right;
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(20deg);
+  }
+  50% {
+    transform: rotate(-15deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+.greeting-subtitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  opacity: 0.95;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Stats Section */
+.stats-section {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 14px 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  min-width: 120px;
+}
+
+.stat-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.stat-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.stat-item.available .stat-icon {
+  background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-item.pharmacies .stat-icon {
+  background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-item.location-prompt .stat-icon {
+  background: linear-gradient(135deg, #FFD200 0%, #FFA500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Motivation Text */
+.motivation-text {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.95);
+  position: relative;
+  z-index: 1;
+}
+
+.motivation-text strong {
+  font-weight: 700;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .personalization-banner {
+    padding: 20px;
+  }
+
+  .banner-content {
+    gap: 20px;
+  }
+
+  .greeting-title {
+    font-size: 28px;
+  }
+
+  .greeting-subtitle {
+    font-size: 15px;
+  }
+
+  .stats-section {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .personalization-banner {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .banner-content {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .greeting-title {
+    font-size: 24px;
+  }
+
+  .greeting-subtitle {
+    font-size: 14px;
+  }
+
+  .time-emoji {
+    font-size: 40px;
+  }
+
+  .greeting-text {
+    gap: 12px;
+  }
+
+  .stat-item {
+    flex: 1;
+    min-width: 100px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .stat-content {
+    align-items: center;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+
+  .stats-section {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .personalization-banner {
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+
+  .greeting-title {
+    font-size: 20px;
+  }
+
+  .greeting-subtitle {
+    font-size: 13px;
+  }
+
+  .time-emoji {
+    font-size: 32px;
+  }
+
+  .wave-emoji {
+    display: none;
+  }
+
+  .greeting-text {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .motivation-text {
+    font-size: 13px;
+  }
+
+  .stat-item {
+    min-width: 80px;
+    padding: 10px 12px;
+  }
+
+  .stat-icon {
+    font-size: 20px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+  }
+
+  .stat-value {
+    font-size: 14px;
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .personalization-banner {
+    background: linear-gradient(135deg, #5568d3 0%, #6b4190 100%);
+    box-shadow: 0 12px 48px rgba(85, 104, 211, 0.3);
+  }
+
+  .stat-item {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .stat-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .time-emoji,
+  .wave-emoji {
+    animation: none;
+  }
+
+  .stat-item:hover {
+    transform: none;
+  }
+}

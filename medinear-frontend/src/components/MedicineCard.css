@@ -1,0 +1,649 @@
+/* ================================== */
+/* MEDICINE CARD REDESIGN - CLEAN & RICH */
+/* ================================== */
+
+.medicine-card-redesigned {
+  background: white;
+  border: 1px solid #e8e8f0;
+  border-radius: 16px;
+  padding: 16px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.medicine-card-redesigned:hover {
+  border-color: #667eea;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+  transform: translateY(-4px);
+}
+
+/* ================================== */
+/* RESERVED COUNTDOWN BADGE */
+/* ================================== */
+
+.card-reserved-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(90deg, #ffd43b 0%, #fab005 100%);
+  color: #333;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+/* ================================== */
+/* CARD HEADER - NAME & STRENGTH */
+/* ================================== */
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.medicine-name-section {
+  flex: 1;
+}
+
+.medicine-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+}
+
+.medicine-strength {
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+  display: inline-block;
+  font-weight: 500;
+}
+
+/* ================================== */
+/* CONFIDENCE BADGE */
+/* ================================== */
+
+.confidence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+  letter-spacing: 0.3px;
+}
+
+.badge-icon {
+  font-size: 14px;
+}
+
+.badge-text {
+  color: inherit;
+}
+
+.badge-time {
+  opacity: 0.7;
+  font-weight: 500;
+  font-size: 11px;
+}
+
+/* Badge colors */
+.confidence-badge.confidence-success {
+  background: rgba(81, 207, 102, 0.1);
+  color: #27ae60;
+  border: 1px solid rgba(81, 207, 102, 0.2);
+}
+
+.confidence-badge.confidence-warning {
+  background: rgba(255, 193, 7, 0.1);
+  color: #f39c12;
+  border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+.confidence-badge.confidence-error {
+  background: rgba(255, 107, 107, 0.1);
+  color: #e74c3c;
+  border: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+/* ================================== */
+/* PRICE & DISTANCE ROW */
+/* ================================== */
+
+.price-distance-row {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid #f0f0f5;
+  border-bottom: 1px solid #f0f0f5;
+}
+
+.price-section,
+.distance-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.price-label,
+.distance-label {
+  font-size: 11px;
+  color: #999;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #667eea;
+  line-height: 1.2;
+}
+
+.distance-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.2;
+}
+
+/* ================================== */
+/* DELIVERY SECTION */
+/* ================================== */
+
+.delivery-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+}
+
+.delivery-icon {
+  font-size: 14px;
+}
+
+.delivery-text {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+/* ================================== */
+/* PHARMACY SECTION */
+/* ================================== */
+
+.pharmacy-section {
+  padding: 8px 0;
+}
+
+.pharmacy-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.3px;
+}
+
+.pharmacy-icon {
+  font-size: 16px;
+}
+
+.pharmacy-location {
+  font-size: 12px;
+  color: #999;
+  margin: 6px 0 0 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.location-icon {
+  font-size: 12px;
+}
+
+/* ================================== */
+/* RATING SECTION */
+/* ================================== */
+
+.rating-section {
+  padding: 8px 0;
+  margin: 4px 0;
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.stars {
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.rating-text {
+  color: #666;
+  font-weight: 600;
+}
+
+.no-rating {
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+}
+
+/* ================================== */
+/* CARD ACTIONS - BUTTONS */
+/* ================================== */
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-card-action {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  letter-spacing: 0.3px;
+  min-height: 40px;
+}
+
+.btn-icon {
+  font-size: 14px;
+}
+
+.btn-text {
+  font-weight: 650;
+}
+
+/* Reserve Button */
+.reserve-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.reserve-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.reserve-btn:active {
+  transform: translateY(0);
+}
+
+/* Call Button */
+.call-btn {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  font-weight: 650;
+}
+
+.call-btn:hover {
+  background: #f8f9ff;
+  border-color: #764ba2;
+  color: #764ba2;
+  transform: translateY(-1px);
+}
+
+.call-btn:active {
+  transform: translateY(0);
+}
+
+/* Directions Button */
+.directions-btn {
+  background: #f0f0f5;
+  color: #333;
+  border: 1px solid #e8e8f0;
+  font-weight: 650;
+}
+
+.directions-btn:hover {
+  background: #e8e8f0;
+  border-color: #d0d0d8;
+  transform: translateY(-1px);
+}
+
+.directions-btn:active {
+  transform: translateY(0);
+}
+
+/* ================================== */
+/* RATING INPUT SECTION */
+/* ================================== */
+
+.rating-input-section {
+  padding: 12px;
+  background: #f8f9ff;
+  border-radius: 8px;
+  margin-top: 4px;
+}
+
+.rating-prompt {
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.3px;
+}
+
+.star-buttons {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.star-btn {
+  background: white;
+  border: 1px solid #e8e8f0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.star-btn:hover {
+  border-color: #667eea;
+  transform: scale(1.1);
+}
+
+.star-btn.selected {
+  background: #667eea;
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+/* ================================== */
+/* RESPONSIVE DESIGN */
+/* ================================== */
+
+@media (max-width: 768px) {
+  .medicine-card-redesigned {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .price-distance-row {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 0;
+  }
+
+  .medicine-name {
+    font-size: 15px;
+  }
+
+  .price-value {
+    font-size: 16px;
+  }
+
+  .card-actions {
+    gap: 6px;
+  }
+
+  .btn-card-action {
+    font-size: 11px;
+    padding: 9px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .medicine-card-redesigned {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .card-reserved-badge {
+    font-size: 11px;
+  }
+
+  .medicine-name {
+    font-size: 14px;
+  }
+
+  .medicine-strength {
+    font-size: 11px;
+  }
+
+  .confidence-badge {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
+  .price-value {
+    font-size: 15px;
+  }
+
+  .distance-value {
+    font-size: 13px;
+  }
+
+  .pharmacy-name {
+    font-size: 13px;
+  }
+
+  .rating-text {
+    font-size: 12px;
+  }
+
+  .card-actions {
+    gap: 4px;
+  }
+
+  .btn-card-action {
+    font-size: 10px;
+    padding: 8px 6px;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 36px;
+  }
+
+  .btn-text {
+    display: none;
+  }
+
+  .btn-icon {
+    font-size: 18px;
+  }
+}
+
+/* ================================== */
+/* DARK MODE WITH GLASSMORPHISM */
+/* ================================== */
+
+[data-theme="dark"] .medicine-card-redesigned {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme="dark"] .medicine-card-redesigned:hover {
+  border-color: #667eea;
+  box-shadow: var(--card-shadow-hover);
+  background: rgba(26, 26, 26, 0.8);
+}
+
+[data-theme="dark"] .medicine-name {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .medicine-strength {
+  color: var(--text-tertiary);
+}
+
+[data-theme="dark"] .price-distance-row {
+  border-top-color: var(--border-color);
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .price-label,
+[data-theme="dark"] .distance-label {
+  color: var(--text-tertiary);
+}
+
+[data-theme="dark"] .distance-value,
+[data-theme="dark"] .pharmacy-name {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .pharmacy-location {
+  color: var(--text-tertiary);
+}
+
+[data-theme="dark"] .rating-text,
+[data-theme="dark"] .delivery-section {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .delivery-text {
+  color: #51cf66;
+}
+
+/* Dark mode confidence badges */
+[data-theme="dark"] .confidence-badge.confidence-success {
+  background: rgba(81, 207, 102, 0.15);
+  color: #80d77c;
+  border: 1px solid rgba(81, 207, 102, 0.25);
+}
+
+[data-theme="dark"] .confidence-badge.confidence-warning {
+  background: rgba(255, 193, 7, 0.12);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.25);
+}
+
+[data-theme="dark"] .confidence-badge.confidence-error {
+  background: rgba(255, 107, 107, 0.12);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 107, 107, 0.25);
+}
+
+/* Dark mode buttons */
+[data-theme="dark"] .call-btn {
+  background: rgba(26, 26, 26, 0.6);
+  color: #a0aef7;
+  border-color: #667eea;
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="dark"] .call-btn:hover {
+  background: rgba(26, 26, 26, 0.8);
+  border-color: #764ba2;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+[data-theme="dark"] .directions-btn {
+  background: rgba(26, 26, 26, 0.6);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="dark"] .directions-btn:hover {
+  background: rgba(26, 26, 26, 0.8);
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+[data-theme="dark"] .reserve-btn {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+}
+
+[data-theme="dark"] .reserve-btn:hover {
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+}
+
+/* Dark mode rating input section */
+[data-theme="dark"] .rating-input-section {
+  background: rgba(42, 42, 50, 0.6);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="dark"] .rating-prompt {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .star-btn {
+  background: rgba(26, 26, 26, 0.6);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+[data-theme="dark"] .star-btn:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+[data-theme="dark"] .star-btn.selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* ================================== */
+/* ACCESSIBILITY */
+/* ================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .medicine-card-redesigned,
+  .btn-card-action,
+  .star-btn {
+    transition: none !important;
+  }
+}
+
+/* ================================== */
+/* PRINT STYLES */
+/* ================================== */
+
+@media print {
+  .card-actions,
+  .rating-input-section {
+    display: none;
+  }
+
+  .medicine-card-redesigned {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #999;
+  }
+}

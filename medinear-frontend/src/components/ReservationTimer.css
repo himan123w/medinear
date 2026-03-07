@@ -1,0 +1,304 @@
+/* Reservation Timer Styles */
+.reservation-timer {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.reservation-timer.active {
+  border-color: #4CAF50;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  }
+}
+
+.reservation-timer.expired {
+  border-color: #F44336;
+  opacity: 0.7;
+}
+
+.reservation-timer.cancelled {
+  border-color: #9E9E9E;
+  opacity: 0.6;
+}
+
+.reservation-timer.completed {
+  border-color: #2196F3;
+}
+
+/* Timer Header */
+.timer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.active-badge {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.expired-badge {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+.cancelled-badge {
+  background: #F5F5F5;
+  color: #616161;
+}
+
+.completed-badge {
+  background: #E3F2FD;
+  color: #1565C0;
+}
+
+.timer-display {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+}
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #E0E0E0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 1s linear, background-color 0.3s ease;
+  border-radius: 4px;
+}
+
+/* Reservation Details */
+.reservation-details {
+  margin: 16px 0;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row .label {
+  color: #666;
+  font-size: 14px;
+}
+
+.detail-row .value {
+  color: #333;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.code-value {
+  font-family: 'Courier New', monospace;
+  background: #F5F5F5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #667eea;
+  font-weight: 700;
+}
+
+/* Warning Message */
+.warning-message {
+  background: #FFF3E0;
+  border-left: 4px solid #FF9800;
+  padding: 12px;
+  margin: 16px 0;
+  border-radius: 4px;
+  color: #E65100;
+  font-weight: 600;
+  font-size: 14px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.extend-button,
+.cancel-button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.extend-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.extend-button:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+  transform: translateY(-2px);
+}
+
+.cancel-button {
+  background: #FFEBEE;
+  color: #C62828;
+  border: 2px solid #FFCDD2;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background: #FFCDD2;
+  border-color: #EF9A9A;
+}
+
+.extend-button:disabled,
+.cancel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Reservation List */
+.reservation-list {
+  padding: 20px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.list-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-buttons button {
+  padding: 8px 16px;
+  border: 2px solid #E0E0E0;
+  background: white;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.filter-buttons button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+}
+
+.filter-buttons button:hover:not(.active) {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
+}
+
+.no-reservations {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 16px;
+}
+
+.reservations-grid {
+  display: grid;
+  gap: 20px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .timer-display {
+    font-size: 24px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .extend-button,
+  .cancel-button {
+    width: 100%;
+  }
+
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .filter-buttons {
+    width: 100%;
+  }
+
+  .filter-buttons button {
+    flex: 1;
+  }
+}
+
+/* Desktop Grid Layout */
+@media (min-width: 768px) {
+  .reservations-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}

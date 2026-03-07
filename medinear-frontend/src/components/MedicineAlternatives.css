@@ -1,0 +1,394 @@
+/* Medicine Alternatives Component Styles */
+
+.medicine-alternatives-container {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.alternatives-toggle-btn {
+  background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(77, 171, 247, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+  position: relative;
+}
+
+.alternatives-toggle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(77, 171, 247, 0.4);
+}
+
+.alternatives-toggle-btn:active {
+  transform: translateY(0);
+}
+
+.alternatives-count {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.alternatives-panel {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 12px;
+  animation: slideDown 0.3s ease-out;
+  border: 2px solid #e9ecef;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alternatives-header {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.alternatives-header h3 {
+  margin: 0 0 8px 0;
+  color: #339af0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.alternatives-subtitle {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.alternatives-loading {
+  text-align: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e9ecef;
+  border-top-color: #4dabf7;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.alternatives-error {
+  background: #fff5f5;
+  border: 2px solid #ff6b6b;
+  border-radius: 8px;
+  padding: 16px;
+  color: #c92a2a;
+  text-align: center;
+  font-weight: 600;
+}
+
+.no-alternatives {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.no-alternatives p:first-child {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.no-alternatives .hint {
+  font-size: 14px;
+  color: #868e96;
+}
+
+.alternatives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.alternative-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.alternative-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(77, 171, 247, 0.2);
+  border-color: #4dabf7;
+}
+
+.alternative-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+.alternative-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  font-weight: 700;
+  flex: 1;
+}
+
+.composition-badge {
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.generic-badge {
+  background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 8px;
+  box-shadow: 0 2px 6px rgba(81, 207, 102, 0.3);
+}
+
+.alternative-details {
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #555;
+}
+
+.alternative-details p {
+  margin: 6px 0;
+  line-height: 1.5;
+}
+
+.composition {
+  font-size: 12px;
+  color: #495057;
+}
+
+.manufacturer {
+  font-size: 12px;
+  color: #666;
+}
+
+.dosage-form {
+  font-size: 12px;
+  color: #666;
+}
+
+.alternative-price-section {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.price-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.current-price {
+  font-size: 22px;
+  color: #51cf66;
+  font-weight: 700;
+}
+
+.price-savings {
+  flex: 1;
+  text-align: right;
+}
+
+.savings-badge {
+  background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(81, 207, 102, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.expensive-badge {
+  background: #fff5f5;
+  color: #c92a2a;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.stock-info {
+  display: flex;
+  align-items: center;
+}
+
+.stock-badge {
+  background: #e7f5ff;
+  color: #1971c2;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.alternative-pharmacy {
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.alternative-pharmacy p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.pharmacy-name {
+  font-weight: 600;
+  color: #4dabf7;
+}
+
+.pharmacy-area {
+  color: #666;
+}
+
+.distance {
+  color: #868e96;
+  font-size: 12px;
+}
+
+.availability-indicator {
+  margin-bottom: 12px;
+}
+
+.availability-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.availability-status.availability-high {
+  background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+}
+
+.availability-status.availability-medium {
+  background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+}
+
+.availability-status.availability-low {
+  background: linear-gradient(135deg, #ff6b6b 0%, #f03e3e 100%);
+}
+
+.alternative-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.alternative-actions .btn {
+  flex: 1;
+  font-size: 13px;
+  padding: 8px 12px;
+}
+
+.alternative-actions .reserve-button {
+  flex: 1.5;
+  font-size: 13px;
+  padding: 8px 12px;
+}
+
+.alternatives-footer {
+  background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #fab005;
+}
+
+.alternatives-footer .disclaimer {
+  margin: 0;
+  font-size: 13px;
+  color: #d9480f;
+  line-height: 1.6;
+}
+
+.alternatives-footer strong {
+  color: #e8590c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .alternatives-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .alternative-card {
+    padding: 14px;
+  }
+
+  .alternatives-panel {
+    padding: 16px;
+  }
+
+  .price-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .price-savings {
+    text-align: left;
+  }
+}

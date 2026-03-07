@@ -1,0 +1,439 @@
+.top-nav-bar {
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--card-shadow);
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+/* Logo */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.25rem;
+  transition: opacity var(--transition-fast);
+}
+
+.nav-logo:hover {
+  opacity: 0.8;
+}
+
+.nav-icon {
+  font-size: 1.5rem;
+}
+
+.nav-brand {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: center;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+}
+
+.nav-link:hover {
+  color: var(--primary);
+  background: rgba(102, 126, 234, 0.08);
+  transform: translateY(-2px);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0.8rem;
+  right: 0.8rem;
+  height: 2px;
+  background: var(--primary-gradient);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-radius: 2px;
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Admin & Pharmacy Buttons */
+.admin-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white !important;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.admin-btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.admin-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+  color: white !important;
+}
+
+.admin-btn::after {
+  display: none;
+}
+
+.pharmacy-btn {
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  color: white !important;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--transition-normal);
+  box-shadow: 0 2px 10px rgba(39, 174, 96, 0.3);
+}
+
+.pharmacy-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.5);
+  color: white !important;
+}
+
+.pharmacy-btn::after {
+  display: none;
+}
+
+/* Right Actions */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.nav-icon-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.nav-icon-btn:hover {
+  background: var(--bg-secondary);
+}
+
+/* User Menu */
+.user-menu {
+  position: relative;
+}
+
+.user-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text-primary);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.user-menu-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary);
+}
+
+.user-avatar {
+  font-size: 1.1rem;
+}
+
+.user-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-arrow {
+  font-size: 0.7rem;
+  transition: transform var(--transition-normal);
+}
+
+.menu-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--card-shadow-hover);
+  overflow: hidden;
+  z-index: 200;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--text-primary);
+  text-decoration: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--transition-fast);
+  font-size: 0.95rem;
+}
+
+.dropdown-item:hover {
+  background: var(--bg-secondary);
+}
+
+.logout-btn {
+  color: var(--error);
+}
+
+.logout-btn:hover {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+/* Auth Buttons */
+.nav-auth {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all var(--transition-fast);
+  border: none;
+  font-size: 0.9rem;
+}
+
+.btn-small {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.btn-primary {
+  background: var(--primary-gradient);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow);
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-container {
+    padding: var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
+
+  .nav-brand {
+    display: none;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  .nav-auth {
+    gap: var(--spacing-xs);
+  }
+
+  .btn-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .user-dropdown {
+    right: -50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-icon-btn {
+    padding: var(--spacing-xs);
+    font-size: 1rem;
+  }
+
+  .nav-logo {
+    gap: var(--spacing-xs);
+  }
+
+  .nav-icon {
+    font-size: 1.25rem;
+  }
+}
+/* ================================== */
+/* DARK MODE STYLING */
+/* ================================== */
+
+[data-theme="dark"] .top-nav-bar {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .nav-logo {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .nav-link {
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+[data-theme="dark"] .nav-link:hover {
+  color: #a0aef7;
+}
+
+[data-theme="dark"] .nav-icon-btn {
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+[data-theme="dark"] .nav-icon-btn:hover {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+  color: #a0aef7;
+}
+
+[data-theme="dark"] .user-menu-btn {
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+[data-theme="dark"] .user-menu-btn:hover {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+}
+
+[data-theme="dark"] .user-dropdown {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .dropdown-item {
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+  background: rgba(102, 126, 234, 0.15);
+  color: #a0aef7;
+  padding-left: 24px;
+}
+
+[data-theme="dark"] .dropdown-item.logout-btn:hover {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff8686;
+}

@@ -1,0 +1,109 @@
+.heatmap-preview-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  border: 1px solid #edf0ff;
+}
+
+.heatmap-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.heatmap-preview-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #2f3551;
+}
+
+.heatmap-preview-header p {
+  margin: 4px 0 0;
+  color: #6f7694;
+  font-size: 12px;
+}
+
+.preview-link-btn {
+  border: none;
+  background: #667eea;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.preview-link-btn:hover {
+  background: #5567c7;
+}
+
+.heatmap-preview-loading,
+.heatmap-preview-error {
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  background: #f6f8ff;
+  color: #445;
+}
+
+.heatmap-preview-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.preview-metric {
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid #f1f2f7;
+}
+
+.preview-metric .metric-icon {
+  font-size: 18px;
+}
+
+.preview-metric strong {
+  display: block;
+  font-size: 18px;
+  color: #2f3551;
+  line-height: 1;
+}
+
+.preview-metric small {
+  color: #6f7694;
+  font-size: 11px;
+}
+
+.preview-metric.high-demand {
+  background: #fff4f4;
+}
+
+.preview-metric.well-stocked {
+  background: #f3fbf4;
+}
+
+.preview-metric.shortage {
+  background: #fffbea;
+}
+
+.heatmap-preview-footnote {
+  margin-top: 12px;
+  color: #6f7694;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .heatmap-preview-metrics {
+    grid-template-columns: 1fr;
+  }
+}

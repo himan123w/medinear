@@ -1,0 +1,171 @@
+.saas-plans-page {
+  min-height: calc(100vh - 70px);
+  background:
+    radial-gradient(900px 420px at -10% -20%, rgba(21, 101, 192, 0.17), transparent 65%),
+    radial-gradient(860px 380px at 110% 0%, rgba(0, 172, 193, 0.17), transparent 66%),
+    linear-gradient(140deg, #f7fbff 0%, #edf6ff 58%, #f9fdff 100%);
+  padding: 28px 16px 48px;
+  font-family: "Manrope", "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+.saas-plans-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.plans-hero {
+  margin-bottom: 12px;
+  max-width: 780px;
+}
+
+.plans-hero h1 {
+  margin: 0 0 10px 0;
+  font-size: clamp(28px, 4vw, 40px);
+  color: #1f3765;
+  letter-spacing: -0.8px;
+}
+
+.plans-hero p {
+  margin: 0;
+  color: #50658f;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.billing-note {
+  margin: 16px 0 22px;
+  background: linear-gradient(145deg, #ecf4ff 0%, #e8fbff 100%);
+  border: 1px solid #cde3ff;
+  color: #244b83;
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.plan-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fafdff 100%);
+  border: 1px solid #d6e7ff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(24, 63, 131, 0.11);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 34px rgba(24, 63, 131, 0.16);
+}
+
+.plan-card.featured {
+  border-color: #2f66ff;
+  box-shadow: 0 20px 40px rgba(47, 102, 255, 0.2);
+}
+
+.plan-pill {
+  position: absolute;
+  top: -10px;
+  right: 14px;
+  background: linear-gradient(135deg, #2f66ff 0%, #22a6f2 100%);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+
+.plan-card h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #1d3a70;
+}
+
+.best-for {
+  margin: 0;
+  color: #5b7098;
+  font-size: 13px;
+}
+
+.price-block {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.price-block strong {
+  font-size: 36px;
+  color: #173870;
+  letter-spacing: -1px;
+}
+
+.price-block span {
+  color: #4f6898;
+  font-size: 14px;
+}
+
+.yearly-price {
+  margin: 0;
+  font-size: 13px;
+  color: #2c5fa8;
+  font-weight: 600;
+}
+
+.plan-card ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  color: #3c5684;
+  display: grid;
+  gap: 6px;
+}
+
+.plan-card li {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.plan-cta {
+  margin-top: auto;
+  border: none;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #2f66ff 0%, #22a6f2 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 13px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.plan-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(47, 102, 255, 0.3);
+}
+
+.plans-footnote {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #556b93;
+}
+
+@media (max-width: 980px) {
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .plan-card {
+    max-width: 100%;
+  }
+}
