@@ -17,6 +17,12 @@ export default function MedicineCard({
 }) {
   const [showRating, setShowRating] = useState(false);
   const availabilityInfo = medicine.availability;
+  const pharmacy = medicine?.pharmacy || null;
+  const pharmacyName = pharmacy?.name || 'Pharmacy Not Available';
+  const pharmacyArea = pharmacy?.area || '';
+  const canCallPharmacy = Boolean(pharmacy?.phone);
+  const canReserve = Boolean(pharmacy?._id);
+  const priceValue = Number(medicine?.price || 0);
 
   // Get confidence badge display
   const getConfidenceBadge = () => {
@@ -71,7 +77,7 @@ export default function MedicineCard({
       <div className="price-distance-row">
         <div className="price-section">
           <span className="price-label">Price</span>
-          <span className="price-value">₹{medicine.price.toFixed(2)}</span>
+          <span className="price-value">₹{priceValue.toFixed(2)}</span>
         </div>
 
         {showDistance && pharmacyDistanceInfo && (
@@ -94,12 +100,12 @@ export default function MedicineCard({
       <div className="pharmacy-section">
         <h4 className="pharmacy-name">
           <span className="pharmacy-icon">💊</span>
-          {medicine.pharmacy?.name || 'Pharmacy Not Available'}
+          {pharmacyName}
         </h4>
-        {showDistance && pharmacyDistanceInfo && medicine.pharmacy?.area && (
+        {showDistance && pharmacyDistanceInfo && pharmacyArea && (
           <p className="pharmacy-location">
             <span className="location-icon">📍</span>
-            {medicine.pharmacy.area}
+            {pharmacyArea}
           </p>
         )}
       </div>
@@ -124,16 +130,17 @@ export default function MedicineCard({
       <div className="card-actions">
         <ReserveButton
           medicine={medicine}
-          pharmacy={medicine.pharmacy}
+          pharmacy={pharmacy}
           onReservationCreated={onReservation}
           className="btn-card-action reserve-btn"
+          disabled={!canReserve}
         />
 
         <button
           className="btn btn-card-action call-btn"
-          onClick={() => medicine.pharmacy?.phone && onCall(medicine.pharmacy.phone)}
-          title={`Call ${medicine.pharmacy?.name || 'pharmacy'} now`}
-          disabled={!medicine.pharmacy?.phone}
+          onClick={() => canCallPharmacy && onCall?.(pharmacy.phone)}
+          title={`Call ${pharmacyName} now`}
+          disabled={!canCallPharmacy}
         >
           <span className="btn-icon">📞</span>
           <span className="btn-text">Call Pharmacy</span>
