@@ -223,6 +223,10 @@ export const medicineAPI = {
     api.get('/medicine/smart-search', { params: { query, latitude, longitude, radius } }),
 };
 
+export const aiAPI = {
+  extractTextWithGoogleVision: (imageBase64) => api.post('/ai/vision-text', { imageBase64 }),
+};
+
 // Pharmacy API
 export const pharmacyAPI = {
   getPharmacies: () => api.get('/pharmacy'),

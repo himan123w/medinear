@@ -10,6 +10,7 @@ import MedicineAlternatives from '../components/MedicineAlternatives';
 import PharmacyOpenStatus from '../components/PharmacyOpenStatus';
 import HeatmapPreviewCard from '../components/HeatmapPreviewCard';
 import EmergencyMedicineFinder from '../components/EmergencyMedicineFinder';
+import MedicineScan from '../components/MedicineScan';
 import TrendingMedicines from '../components/TrendingMedicines';
 import PharmacyMapView from '../components/PharmacyMapView';
 import PersonalizationBanner from '../components/PersonalizationBanner';
@@ -583,6 +584,14 @@ export default function Home() {
           </div>
         </form>
       </div>
+
+      {/* Medicine scanning with OCR (camera + Google Vision) */}
+      <MedicineScan onMedicineDetected={(medicines) => {
+        if (medicines?.length > 0) {
+          setSearchQuery(medicines[0].name || '');
+          setMedicines(medicines);
+        }
+      }} />
 
       {/* Premium Hero Section */}
       <HeroSection

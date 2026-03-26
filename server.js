@@ -89,6 +89,7 @@ app.use("/api/delivery", require("./routes/deliveryRoutes"));
 app.use("/api/subscription", require("./routes/subscriptionRoutes"));
 app.use("/api/inventory", require("./routes/inventoryRoutes"));
 app.use("/api/analytics", require("./routes/analyticsRoutes"));
+app.use("/api/ai", require("./routes/visionRoutes"));
 app.use("/api/billing", require("./routes/billingRoutes"));
 app.use("/api/reservations", require("./routes/reservationRoutes"));
 app.use("/api/stock-notifications", require("./routes/backInStockRoutes"));

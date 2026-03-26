@@ -1,0 +1,100 @@
+.medicine-scan-widget {
+  background: #fbfbff;
+  border: 1px solid #9cabff;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.medicine-scan-widget h3 {
+  margin: 0 0 8px;
+}
+
+.medicine-scan-widget p {
+  margin: 0 0 12px;
+  color: #3b3d59;
+}
+
+.medicine-scan-widget .top-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.medicine-scan-widget .scan-status,
+.medicine-scan-widget .scan-error {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.medicine-scan-widget .scan-error {
+  color: #d32f2f;
+}
+
+.medicine-scan-widget .scan-status {
+  color: #0f6b0f;
+}
+
+.medicine-scan-widget .scan-area {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.medicine-scan-widget .video-container {
+  position: relative;
+  border: 1px solid #c4c8dd;
+  border-radius: 8px;
+  overflow: hidden;
+  min-height: 200px;
+}
+
+.medicine-scan-widget .scan-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.medicine-scan-widget .scan-results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.medicine-scan-widget label,
+.medicine-scan-widget h4 {
+  margin: 0;
+}
+
+.medicine-scan-widget select,
+.medicine-scan-widget textarea {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #c0c6dd;
+  padding: 8px;
+}
+
+.medicine-scan-widget .search-results ul {
+  margin: 6px 0 0;
+  padding-left: 20px;
+}
+
+.medicine-scan-widget .search-results li {
+  padding: 4px 0;
+  border-bottom: 1px solid #ebedf4;
+}
+
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-secondary { background: #7f9cff; color:#fff; }
+.btn-primary { background: #4253ff; color:#fff; }
+.btn-danger { background: #d60000; color:#fff; }
+.btn-info { background: #1e9fff; color:#fff; }
+.btn-outline { background: #fff; border: 1px solid #6786ff; color:#1c2e7d; }
