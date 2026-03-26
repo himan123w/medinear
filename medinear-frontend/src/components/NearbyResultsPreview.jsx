@@ -96,6 +96,7 @@ export default function NearbyResultsPreview({
           <button 
             className="view-all-btn"
             onClick={onViewAll}
+            type="button"
             title="View all results"
           >
             View All →
@@ -185,6 +186,8 @@ export default function NearbyResultsPreview({
                           e.stopPropagation();
                           onCall(group.pharmacy.phone);
                         }}
+                        type="button"
+                        aria-label={`Call ${group.pharmacy.name}`}
                         title={`Call ${group.pharmacy.name} now`}
                       >
                         <span className="btn-icon">📞</span>
@@ -196,6 +199,8 @@ export default function NearbyResultsPreview({
                           e.stopPropagation();
                           onReserve(group.lowestPriceMedicine);
                         }}
+                        type="button"
+                        aria-label={`Reserve ${group.lowestPriceMedicine?.name || 'medicine'} for 30 minutes`}
                         title="Reserve this medicine for 30 minutes"
                       >
                         <span className="btn-icon">🛒</span>
@@ -210,6 +215,8 @@ export default function NearbyResultsPreview({
                             window.open(url, '_blank');
                           }
                         }}
+                        type="button"
+                        aria-label={`Get directions to ${group.pharmacy.name}`}
                         title="Get directions to pharmacy"
                       >
                         <span className="btn-icon">🗺️</span>

@@ -277,7 +277,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <div className="dashboard-stats">
+      <div className="dashboard-stats fade-in-stagger">
         <div className="stat-card">
           <h3>{medicines.length}</h3>
           <p>Total Medicines</p>
@@ -296,12 +296,12 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="dashboard-heatmap-preview">
+      <div className="dashboard-heatmap-preview fade-in-up">
         <HeatmapPreviewCard compact={true} />
       </div>
 
       <div className="dashboard-content">
-        <div className="medicines-section">
+        <div className="medicines-section fade-in-up">
           <div className="section-header">
             <h2>Medicines</h2>
             <button 
@@ -417,7 +417,7 @@ export default function Dashboard() {
           {loading ? (
             <p className="loading">Loading medicines...</p>
           ) : medicines.length > 0 ? (
-            <div className="medicines-table-wrapper">
+            <div className="medicines-table-wrapper fade-in-up">
               <table className="medicines-table">
                 <thead>
                   <tr>
@@ -507,10 +507,10 @@ export default function Dashboard() {
       {/* Stock Update Modal */}
       {editingStock && (
         <div className="modal-overlay" onClick={closeStockModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Update medicine stock">
             <div className="modal-header">
               <h3>Update Stock - {stockModalData.medicineName}</h3>
-              <button className="modal-close" onClick={closeStockModal}>×</button>
+              <button className="modal-close" onClick={closeStockModal} type="button" aria-label="Close stock update modal">×</button>
             </div>
             
             <form onSubmit={handleStockUpdate} className="stock-form">

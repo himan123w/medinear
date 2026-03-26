@@ -4,7 +4,7 @@
   "description": "Local Medicine Availability Platform for Pharmacies",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm run restart",
     "dev": "nodemon server.js",
     "restart": "lsof -ti:5001 | xargs kill -9 2>/dev/null; node server.js",
     "kill-port": "lsof -ti:5001 | xargs kill -9 2>/dev/null || echo 'No process on port 5001'",

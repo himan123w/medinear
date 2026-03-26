@@ -34,10 +34,18 @@ export default function EmergencyMedicineFinder({ compact = false }) {
         });
       },
       (err) => {
-        console.error('Location error:', err);
-        showNotification('Please enable location access', 'error');
+        let message = 'Unable to get location. Please try again.';
+        if (err?.code === err.PERMISSION_DENIED) {
+          message = 'Location permission denied. Please allow location access.';
+        } else if (err?.code === err.POSITION_UNAVAILABLE) {
+          message = 'Location unavailable. Move to an open area and retry.';
+        } else if (err?.code === err.TIMEOUT) {
+          message = 'Location request timed out. Please retry.';
+        }
+        console.warn('Location error:', err?.message || 'Unknown geolocation error');
+        showNotification(message, 'error');
       },
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 300000 }
     );
   };
 

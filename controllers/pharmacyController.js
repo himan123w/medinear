@@ -40,9 +40,11 @@ exports.getPharmacies = async (req, res) => {
 // Get pharmacies near a location (within a radius)
 exports.getPharmaciesNearby = async (req, res) => {
   try {
-    const { latitude, longitude, maxDistance = 50000 } = req.query;
+    const { latitude, longitude, lat, lng, maxDistance = 50000 } = req.query;
+    const resolvedLatitude = latitude ?? lat;
+    const resolvedLongitude = longitude ?? lng;
 
-    if (!latitude || !longitude) {
+    if (!resolvedLatitude || !resolvedLongitude) {
       return res.status(400).json({ error: 'Latitude and longitude are required' });
     }
 
@@ -51,7 +53,7 @@ exports.getPharmaciesNearby = async (req, res) => {
         $near: {
           $geometry: {
             type: 'Point',
-            coordinates: [Number(longitude), Number(latitude)]
+            coordinates: [Number(resolvedLongitude), Number(resolvedLatitude)]
           },
           $maxDistance: Number(maxDistance) // meters
         }
@@ -67,9 +69,11 @@ exports.getPharmaciesNearby = async (req, res) => {
 // Emergency: Find 24x7 pharmacies nearby that have in-stock medicines
 exports.emergencyPharmacies = async (req, res) => {
   try {
-    const { latitude, longitude, radius = 5, medicineName = '' } = req.query;
+    const { latitude, longitude, lat, lng, radius = 5, medicineName = '' } = req.query;
+    const resolvedLatitude = latitude ?? lat;
+    const resolvedLongitude = longitude ?? lng;
 
-    if (!latitude || !longitude) {
+    if (!resolvedLatitude || !resolvedLongitude) {
       return res.status(400).json({ error: 'Latitude and longitude are required' });
     }
 
@@ -82,7 +86,7 @@ exports.emergencyPharmacies = async (req, res) => {
         $near: {
           $geometry: {
             type: 'Point',
-            coordinates: [Number(longitude), Number(latitude)]
+            coordinates: [Number(resolvedLongitude), Number(resolvedLatitude)]
           },
           $maxDistance: maxDistance
         }
@@ -115,7 +119,9 @@ exports.emergencyPharmacies = async (req, res) => {
           return R * c;
         };
 
-        const distanceKm = p.latitude && p.longitude ? calculateDistance(Number(latitude), Number(longitude), Number(p.latitude), Number(p.longitude)) : null;
+        const distanceKm = p.latitude && p.longitude
+          ? calculateDistance(Number(resolvedLatitude), Number(resolvedLongitude), Number(p.latitude), Number(p.longitude))
+          : null;
 
         results.push({
           pharmacy: p,

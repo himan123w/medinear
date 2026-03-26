@@ -3,6 +3,7 @@
 .delivery-page {
   background: linear-gradient(180deg, #f5f7fa 0%, #e8ebf0 100%);
   min-height: 100vh;
+  min-height: 100dvh;
   padding-bottom: 3rem;
 }
 
@@ -114,6 +115,9 @@
   background: #f9f9f9;
   border-bottom: 2px solid #e0e0e0;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
 }
 
 .tab-btn {

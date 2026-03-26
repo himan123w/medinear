@@ -9,7 +9,7 @@ export default function Login() {
   const { login } = useAuth();
   const [loginType, setLoginType] = useState('user'); // 'user' or 'pharmacy'
   const [formData, setFormData] = useState({
-    email: '',
+    identifier: '',
     phone: '',
     password: '',
   });
@@ -34,13 +34,24 @@ export default function Login() {
       let response;
       if (loginType === 'user') {
         // User login
+        const identifier = formData.identifier.trim();
+        const isEmail = identifier.includes('@');
         response = await authAPI.userLogin({
-          email: formData.email,
+          email: isEmail ? identifier : '',
+          phone: isEmail ? '' : identifier,
           password: formData.password
         });
         login(response.data.user, response.data.token);
         alert('Login successful!');
-        navigate('/dashboard');
+
+        const role = response.data.user?.role;
+        if (role === 'admin') {
+          navigate('/admin');
+        } else if (role === 'pharmacy') {
+          navigate('/pharmacy');
+        } else {
+          navigate('/dashboard');
+        }
       } else {
         // Pharmacy login
         response = await authAPI.login({
@@ -49,7 +60,7 @@ export default function Login() {
         });
         login(response.data.pharmacy, response.data.token);
         alert('Login successful!');
-        navigate('/dashboard');
+        navigate('/pharmacy');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
@@ -75,7 +86,7 @@ export default function Login() {
             className={`login-type-tab ${loginType === 'user' ? 'active' : ''}`}
             onClick={() => {
               setLoginType('user');
-              setFormData({ email: '', phone: '', password: '' });
+              setFormData({ identifier: '', phone: '', password: '' });
               setError('');
             }}
           >
@@ -85,7 +96,7 @@ export default function Login() {
             className={`login-type-tab ${loginType === 'pharmacy' ? 'active' : ''}`}
             onClick={() => {
               setLoginType('pharmacy');
-              setFormData({ email: '', phone: '', password: '' });
+              setFormData({ identifier: '', phone: '', password: '' });
               setError('');
             }}
           >
@@ -105,19 +116,22 @@ export default function Login() {
             <>
               {/* User Email Field */}
               <div className="form-group">
-                <label className="form-label">Email Address</label>
-                <div className={`form-field ${focused === 'email' ? 'focused' : ''}`}>
+                <label className="form-label">Email or Phone</label>
+                <div className={`form-field ${focused === 'identifier' ? 'focused' : ''}`}>
                   <span className="form-icon">📧</span>
                   <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
+                    type="text"
+                    name="identifier"
+                    placeholder="Enter email or phone"
+                    value={formData.identifier}
                     onChange={handleChange}
-                    onFocus={() => setFocused('email')}
+                    onFocus={() => setFocused('identifier')}
                     onBlur={() => setFocused(null)}
                     required
                     className="form-input"
+                    inputMode="email"
+                    autoComplete="username"
+                    autoCapitalize="off"
                   />
                 </div>
               </div>
@@ -137,6 +151,8 @@ export default function Login() {
                     onBlur={() => setFocused(null)}
                     required
                     className="form-input"
+                    autoComplete="current-password"
+                    autoCapitalize="off"
                   />
                 </div>
               </div>
@@ -158,6 +174,9 @@ export default function Login() {
                     onBlur={() => setFocused(null)}
                     required
                     className="form-input"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    autoCapitalize="off"
                   />
                 </div>
               </div>
@@ -177,6 +196,8 @@ export default function Login() {
                     onBlur={() => setFocused(null)}
                     required
                     className="form-input"
+                    autoComplete="current-password"
+                    autoCapitalize="off"
                   />
                 </div>
               </div>

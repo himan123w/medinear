@@ -1,7 +1,64 @@
 import axios from 'axios';
 import { safeStorage } from './utils/safeStorage';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+let lastNetworkErrorLogAt = 0;
+const NETWORK_ERROR_LOG_COOLDOWN_MS = 10000;
+
+const shouldLogNetworkError = () => {
+  const now = Date.now();
+  if (now - lastNetworkErrorLogAt > NETWORK_ERROR_LOG_COOLDOWN_MS) {
+    lastNetworkErrorLogAt = now;
+    return true;
+  }
+  return false;
+};
+
+const getAlternateLocalBaseUrl = (baseUrl) => {
+  const current = String(baseUrl || '');
+  if (!current) return null;
+
+  if (current.includes('127.0.0.1')) {
+    return current.replace('127.0.0.1', 'localhost');
+  }
+
+  if (current.includes('localhost')) {
+    return current.replace('localhost', '127.0.0.1');
+  }
+
+  return null;
+};
+
+const resolveApiBaseUrl = () => {
+  const envApiUrl = String(import.meta.env.VITE_API_URL || '').trim();
+
+  if (import.meta.env.DEV) {
+    if (typeof window !== 'undefined') {
+      const currentHost = window.location.hostname;
+      const isLocalHost = currentHost === 'localhost' || currentHost === '127.0.0.1';
+      const envLooksLocal = /localhost|127\.0\.0\.1/i.test(envApiUrl);
+
+      // In local development, prefer local backend to avoid stale LAN-IP timeouts.
+      if (isLocalHost && envApiUrl && !envLooksLocal) {
+        return 'http://127.0.0.1:5001/api';
+      }
+    }
+
+    return envApiUrl || 'http://127.0.0.1:5001/api';
+  }
+
+  if (envApiUrl) {
+    return envApiUrl;
+  }
+
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    return `http://${host}:5001/api`;
+  }
+
+  return 'http://localhost:5001/api';
+};
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 // Log API configuration (only in development)
 if (import.meta.env.DEV) {
@@ -13,7 +70,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000, // 30 second timeout
+  timeout: 15000, // 15 second timeout for faster feedback
 });
 
 // Request interceptor - Add auth token
@@ -33,13 +90,45 @@ api.interceptors.request.use(
 // Response interceptor - Handle errors globally
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     // Network error
     if (!error.response) {
-      console.error('[API] Network error - Server might be down:', error.message);
+      const originalConfig = error.config || {};
+      const retryAlreadyAttempted = Boolean(originalConfig.__networkRetryAttempted);
+      const currentBaseUrl = originalConfig.baseURL || API_BASE_URL;
+      const alternateBaseUrl = getAlternateLocalBaseUrl(currentBaseUrl);
+
+      if (!retryAlreadyAttempted && alternateBaseUrl) {
+        try {
+          const retryConfig = {
+            ...originalConfig,
+            baseURL: alternateBaseUrl,
+            __networkRetryAttempted: true,
+          };
+
+          return await api.request(retryConfig);
+        } catch (retryError) {
+          // Continue to normalized error response below.
+          error = retryError;
+        }
+      }
+
+      const isTimeout = error.code === 'ECONNABORTED' || String(error.message || '').toLowerCase().includes('timeout');
+      const fallbackMessage = isTimeout
+        ? 'Request timed out. Please check if backend server is running.'
+        : 'Network error. Please check your connection.';
+
+      if (shouldLogNetworkError()) {
+        const method = String(error.config?.method || 'GET').toUpperCase();
+        const url = error.config?.url || 'unknown-url';
+        console.error(`[API] Network error: ${method} ${url} (${error.code || 'NO_CODE'}) ${error.message || ''}`);
+      }
+
       return Promise.reject({
-        message: 'Network error. Please check your connection.',
+        message: fallbackMessage,
         isNetworkError: true,
+        isTimeout,
+        code: error.code,
         originalError: error
       });
     }
@@ -83,11 +172,11 @@ api.interceptors.response.use(
 // Auth API
 export const authAPI = {
   // User authentication
-  userRegister: (data) => api.post('/auth/user/register', data),
-  userLogin: (data) => api.post('/auth/user/login', data),
+  userRegister: (data) => api.post('/auth/user/register', data, { timeout: 10000 }),
+  userLogin: (data) => api.post('/auth/user/login', data, { timeout: 10000 }),
   // Pharmacy authentication
-  register: (data) => api.post('/auth/register', data),
-  login: (data) => api.post('/auth/login', data),
+  register: (data) => api.post('/auth/register', data, { timeout: 10000 }),
+  login: (data) => api.post('/auth/login', data, { timeout: 10000 }),
 };
 
 // Medicine API

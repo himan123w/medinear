@@ -5,7 +5,24 @@ import { useToast } from '../ToastContext';
 import axios from 'axios';
 import './AdminDashboard.css';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const resolveAdminApiBase = () => {
+  const envApiUrl = String(import.meta.env.VITE_API_URL || '').trim();
+
+  if (import.meta.env.DEV && typeof window !== 'undefined') {
+    const currentHost = window.location.hostname;
+    const isLocalHost = currentHost === 'localhost' || currentHost === '127.0.0.1';
+    const envLooksLocal = /localhost|127\.0\.0\.1/i.test(envApiUrl);
+
+    // Prevent stale LAN API URL from breaking local admin dashboard.
+    if (isLocalHost && envApiUrl && !envLooksLocal) {
+      return 'http://127.0.0.1:5001/api';
+    }
+  }
+
+  return envApiUrl || 'http://127.0.0.1:5001/api';
+};
+
+const API_BASE = resolveAdminApiBase();
 
 function AdminDashboard() {
   const navigate = useNavigate();

@@ -4,6 +4,7 @@
     radial-gradient(900px 400px at 110% 20%, rgba(76, 201, 240, 0.2), transparent 65%),
     linear-gradient(140deg, #f3f8ff 0%, #eef6ff 45%, #f6fbff 100%);
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 40px 20px;
   font-family: "Manrope", "Segoe UI", "Helvetica Neue", sans-serif;
 }

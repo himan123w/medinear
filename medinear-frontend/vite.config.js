@@ -27,13 +27,17 @@ export default defineConfig({
   },
   // Server configuration
   server: {
+    host: '0.0.0.0',
     port: 3000,
+    strictPort: true,
     open: true, // Auto-open browser
     cors: true,
   },
   // Preview server configuration
   preview: {
+    host: '0.0.0.0',
     port: 3000,
+    strictPort: true,
     open: true,
   },
 })

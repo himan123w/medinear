@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ReserveButton from './ReserveButton';
 import './MedicineCard.css';
 
@@ -16,6 +16,7 @@ export default function MedicineCard({
   onViewIncrement = null,
 }) {
   const [showRating, setShowRating] = useState(false);
+  const hasTrackedViewRef = useRef(false);
   const availabilityInfo = medicine.availability;
   const pharmacy = medicine?.pharmacy || null;
   const pharmacyName = pharmacy?.name || 'Pharmacy Not Available';
@@ -23,6 +24,40 @@ export default function MedicineCard({
   const canCallPharmacy = Boolean(pharmacy?.phone);
   const canReserve = Boolean(pharmacy?._id);
   const priceValue = Number(medicine?.price || 0);
+
+  useEffect(() => {
+    if (hasTrackedViewRef.current) return;
+    if (!medicine?._id || typeof onViewIncrement !== 'function') return;
+
+    hasTrackedViewRef.current = true;
+    onViewIncrement(medicine._id);
+  }, [medicine?._id, onViewIncrement]);
+
+  const fomoSignals = useMemo(() => {
+    const stock = Number(medicine?.stock ?? 0);
+    const stockAlert = Number(medicine?.stockAlert ?? 10);
+    const lowStockThreshold = Math.max(2, Math.min(stockAlert || 10, 5));
+    const isLowStock = stock > 0 && stock <= lowStockThreshold;
+
+    const lowStockMessage = isLowStock
+      ? `Only ${stock} left at this pharmacy`
+      : medicine?.fomo?.lowStockMessage || null;
+
+    const baseViews = Number(medicine?.views ?? 0);
+    const seedSource = String(medicine?._id || medicine?.name || 'medinear');
+    const seed = seedSource.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 3;
+    const estimatedViewersNow = Math.max(
+      1,
+      Math.min(12, Math.round(baseViews * 0.08) + (isLowStock ? 3 : 0) + 2 + seed)
+    );
+
+    const viewersNow = Number(medicine?.fomo?.viewersNow) || estimatedViewersNow;
+    const viewersMessage = stock > 0
+      ? `${viewersNow} people are viewing this medicine`
+      : null;
+
+    return { lowStockMessage, viewersMessage };
+  }, [medicine]);
 
   // Get confidence badge display
   const getConfidenceBadge = () => {
@@ -72,6 +107,23 @@ export default function MedicineCard({
         <span className="badge-text">{badge.text}</span>
         <span className="badge-time">| {badge.time}</span>
       </div>
+
+      {(fomoSignals.lowStockMessage || fomoSignals.viewersMessage) && (
+        <div className="fomo-signals" role="status" aria-live="polite">
+          {fomoSignals.lowStockMessage && (
+            <div className="fomo-pill fomo-low-stock">
+              <span>⚠</span>
+              <span>{fomoSignals.lowStockMessage}</span>
+            </div>
+          )}
+          {fomoSignals.viewersMessage && (
+            <div className="fomo-pill fomo-viewing">
+              <span>⏳</span>
+              <span>{fomoSignals.viewersMessage}</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Price + Distance Row */}
       <div className="price-distance-row">
@@ -139,6 +191,8 @@ export default function MedicineCard({
         <button
           className="btn btn-card-action call-btn"
           onClick={() => canCallPharmacy && onCall?.(pharmacy.phone)}
+          type="button"
+          aria-label={`Call ${pharmacyName}`}
           title={`Call ${pharmacyName} now`}
           disabled={!canCallPharmacy}
         >
@@ -157,6 +211,8 @@ export default function MedicineCard({
                 window.open(url, '_blank');
               }
             }}
+            type="button"
+            aria-label={`Get directions to ${pharmacyName}`}
             title="Get directions to pharmacy"
           >
             <span className="btn-icon">🗺️</span>

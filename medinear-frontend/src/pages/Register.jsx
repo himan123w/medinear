@@ -5,8 +5,10 @@ import './Auth.css';
 
 export default function Register() {
   const navigate = useNavigate();
+  const [registerType, setRegisterType] = useState('user'); // 'user' or 'pharmacy'
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
     owner: '',
     phone: '',
     password: '',
@@ -22,6 +24,25 @@ export default function Register() {
   const [locationStatus, setLocationStatus] = useState(''); // 'pending', 'success', 'error'
   const [locationLoading, setLocationLoading] = useState(false);
   const [focused, setFocused] = useState(null);
+
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      email: '',
+      owner: '',
+      phone: '',
+      password: '',
+      confpassword: '',
+      area: '',
+      licenseNumber: '',
+      latitude: null,
+      longitude: null,
+      address: ''
+    });
+    setError('');
+    setLocationStatus('');
+    setLocationLoading(false);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -120,7 +141,7 @@ export default function Register() {
       return;
     }
 
-    if (!formData.latitude || !formData.longitude) {
+    if (registerType === 'pharmacy' && (!formData.latitude || !formData.longitude)) {
       setError('📍 Location permission required! Please click "Get Location" to share your pharmacy location.');
       return;
     }
@@ -128,8 +149,17 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const { confpassword, ...registerData } = formData;
-      await authAPI.register(registerData);
+      if (registerType === 'user') {
+        await authAPI.userRegister({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          password: formData.password
+        });
+      } else {
+        const { confpassword, email, ...registerData } = formData;
+        await authAPI.register(registerData);
+      }
       alert('✅ Registration successful! Please login with your credentials.');
       navigate('/login');
     } catch (err) {
@@ -141,12 +171,39 @@ export default function Register() {
 
   return (
     <div className="auth-container">
-      <div className="auth-card pharmacy-register-card">
+      <div className={`auth-card ${registerType === 'pharmacy' ? 'pharmacy-register-card pharmacy-login-card' : 'user-login-card'}`}>
         <div className="auth-header">
-          <div className="auth-icon pharmacy-icon">🏥</div>
+          <div className={`auth-icon ${registerType === 'pharmacy' ? 'pharmacy-icon' : ''}`}>
+            {registerType === 'pharmacy' ? '🏥' : '👤'}
+          </div>
           <h1 className="auth-title">🏥 MediNear</h1>
           <p className="auth-subtitle">Your Medicine Availability Platform</p>
-          <p className="auth-subtitle" style={{marginTop: '8px', fontSize: '14px'}}>Pharmacy Registration</p>
+          <p className="auth-subtitle" style={{ marginTop: '8px', fontSize: '14px' }}>
+            {registerType === 'pharmacy' ? 'Pharmacy Registration' : 'User Registration'}
+          </p>
+        </div>
+
+        <div className="login-type-tabs">
+          <button
+            className={`login-type-tab ${registerType === 'user' ? 'active' : ''}`}
+            onClick={() => {
+              setRegisterType('user');
+              resetForm();
+            }}
+            type="button"
+          >
+            👤 User Register
+          </button>
+          <button
+            className={`login-type-tab ${registerType === 'pharmacy' ? 'active' : ''}`}
+            onClick={() => {
+              setRegisterType('pharmacy');
+              resetForm();
+            }}
+            type="button"
+          >
+            🏥 Pharmacy Register
+          </button>
         </div>
 
         {error && (
@@ -156,15 +213,15 @@ export default function Register() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="pharmacy-register-form">
-          <div className="form-section">
-            <h3 className="section-title">📊 Pharmacy Information</h3>
-            
-            <div className="form-row">
-              <div className="form-group">
+        {registerType === 'user' ? (
+          <form onSubmit={handleSubmit} className="user-login-form">
+            <div className="form-section">
+              <h3 className="section-title">👤 User Information</h3>
+
+              <div className="form-group full-width">
                 <label htmlFor="name" className="form-label">
-                  <span className="label-icon">🏷️</span>
-                  <span className="label-text">Pharmacy Name</span>
+                  <span className="label-icon">🧑</span>
+                  <span className="label-text">Full Name</span>
                 </label>
                 <div className="input-wrapper">
                   <input
@@ -175,233 +232,398 @@ export default function Register() {
                     onChange={handleChange}
                     onFocus={() => setFocused('name')}
                     onBlur={() => setFocused(null)}
-                    placeholder="e.g., City Care Pharmacy"
+                    placeholder="Enter your full name"
                     required
                     className={focused === 'name' ? 'input-focused' : ''}
+                    autoComplete="name"
+                    autoCapitalize="words"
                   />
                   <span className="input-focus-border"></span>
                 </div>
-                <small className="field-hint">Official name of your pharmacy</small>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="owner" className="form-label">
-                  <span className="label-icon">👤</span>
-                  <span className="label-text">Owner Name</span>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">
+                    <span className="label-icon">📧</span>
+                    <span className="label-text">Email Address</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('email')}
+                      onBlur={() => setFocused(null)}
+                      placeholder="Enter your email"
+                      required
+                      className={focused === 'email' ? 'input-focused' : ''}
+                      inputMode="email"
+                      autoComplete="email"
+                      autoCapitalize="off"
+                    />
+                    <span className="input-focus-border"></span>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="phone" className="form-label">
+                    <span className="label-icon">📱</span>
+                    <span className="label-text">Phone Number</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('phone')}
+                      onBlur={() => setFocused(null)}
+                      placeholder="Enter phone number"
+                      required
+                      className={focused === 'phone' ? 'input-focused' : ''}
+                      inputMode="tel"
+                      autoComplete="tel"
+                      autoCapitalize="off"
+                    />
+                    <span className="input-focus-border"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <h3 className="section-title">🔐 Security</h3>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="password" className="form-label">
+                    <span className="label-icon">🔒</span>
+                    <span className="label-text">Password</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('password')}
+                      onBlur={() => setFocused(null)}
+                      placeholder="Minimum 6 characters"
+                      required
+                      className={focused === 'password' ? 'input-focused' : ''}
+                      autoComplete="new-password"
+                      autoCapitalize="off"
+                    />
+                    <span className="input-focus-border"></span>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="confpassword" className="form-label">
+                    <span className="label-icon">✓</span>
+                    <span className="label-text">Confirm Password</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <input
+                      type="password"
+                      id="confpassword"
+                      name="confpassword"
+                      value={formData.confpassword}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('confpassword')}
+                      onBlur={() => setFocused(null)}
+                      placeholder="Re-enter password"
+                      required
+                      className={focused === 'confpassword' ? 'input-focused' : ''}
+                      autoComplete="new-password"
+                      autoCapitalize="off"
+                    />
+                    <span className="input-focus-border"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className={`btn btn-primary btn-full btn-login ${loading ? 'btn-loading' : ''}`}
+              disabled={loading}
+            >
+              <span className="btn-icon">📝</span>
+              <span className="btn-text">
+                {loading ? 'Registration in progress...' : 'Create User Account'}
+              </span>
+              {loading && <span className="btn-spinner"></span>}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="pharmacy-register-form">
+            <div className="form-section">
+              <h3 className="section-title">📊 Pharmacy Information</h3>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="name" className="form-label">
+                    <span className="label-icon">🏷️</span>
+                    <span className="label-text">Pharmacy Name</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('name')}
+                      onBlur={() => setFocused(null)}
+                      placeholder="e.g., City Care Pharmacy"
+                      required
+                      className={focused === 'name' ? 'input-focused' : ''}
+                      autoComplete="organization"
+                      autoCapitalize="words"
+                    />
+                    <span className="input-focus-border"></span>
+                  </div>
+                  <small className="field-hint">Official name of your pharmacy</small>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="owner" className="form-label">
+                    <span className="label-icon">👤</span>
+                    <span className="label-text">Owner Name</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <input
+                      type="text"
+                      id="owner"
+                      name="owner"
+                      value={formData.owner}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('owner')}
+                      onBlur={() => setFocused(null)}
+                      placeholder="Your full name"
+                      required
+                      className={focused === 'owner' ? 'input-focused' : ''}
+                      autoComplete="name"
+                      autoCapitalize="words"
+                    />
+                    <span className="input-focus-border"></span>
+                  </div>
+                  <small className="field-hint">Pharmacy owner/manager name</small>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <h3 className="section-title">📞 Contact Information</h3>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="phone" className="form-label">
+                    <span className="label-icon">📱</span>
+                    <span className="label-text">Phone Number</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('phone')}
+                      onBlur={() => setFocused(null)}
+                      placeholder="10-digit phone number"
+                      required
+                      className={focused === 'phone' ? 'input-focused' : ''}
+                      inputMode="tel"
+                      autoComplete="tel"
+                      autoCapitalize="off"
+                    />
+                    <span className="input-focus-border"></span>
+                  </div>
+                  <small className="field-hint">Mobile number for communication</small>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="area" className="form-label">
+                    <span className="label-icon">📍</span>
+                    <span className="label-text">Area/Location</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <input
+                      type="text"
+                      id="area"
+                      name="area"
+                      value={formData.area}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('area')}
+                      onBlur={() => setFocused(null)}
+                      placeholder="Your locality/area"
+                      required
+                      className={focused === 'area' ? 'input-focused' : ''}
+                      autoComplete="address-level2"
+                      autoCapitalize="words"
+                    />
+                    <span className="input-focus-border"></span>
+                  </div>
+                  <small className="field-hint">City/Area where pharmacy is located</small>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-section">
+              <h3 className="section-title">⚖️ Legal Information</h3>
+
+              <div className="form-group full-width">
+                <label htmlFor="licenseNumber" className="form-label">
+                  <span className="label-icon">📜</span>
+                  <span className="label-text">License Number</span>
                 </label>
                 <div className="input-wrapper">
                   <input
                     type="text"
-                    id="owner"
-                    name="owner"
-                    value={formData.owner}
+                    id="licenseNumber"
+                    name="licenseNumber"
+                    value={formData.licenseNumber}
                     onChange={handleChange}
-                    onFocus={() => setFocused('owner')}
+                    onFocus={() => setFocused('licenseNumber')}
                     onBlur={() => setFocused(null)}
-                    placeholder="Your full name"
+                    placeholder="Pharmacy registration/license number"
                     required
-                    className={focused === 'owner' ? 'input-focused' : ''}
+                    className={focused === 'licenseNumber' ? 'input-focused' : ''}
+                    autoComplete="off"
+                    autoCapitalize="off"
                   />
                   <span className="input-focus-border"></span>
                 </div>
-                <small className="field-hint">Pharmacy owner/manager name</small>
-              </div>
-            </div>
-          </div>
-
-          <div className="form-section">
-            <h3 className="section-title">📞 Contact Information</h3>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="phone" className="form-label">
-                  <span className="label-icon">📱</span>
-                  <span className="label-text">Phone Number</span>
-                </label>
-                <div className="input-wrapper">
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    onFocus={() => setFocused('phone')}
-                    onBlur={() => setFocused(null)}
-                    placeholder="10-digit phone number"
-                    required
-                    className={focused === 'phone' ? 'input-focused' : ''}
-                  />
-                  <span className="input-focus-border"></span>
-                </div>
-                <small className="field-hint">Mobile number for communication</small>
+                <small className="field-hint">Government registration number</small>
               </div>
 
-              <div className="form-group">
-                <label htmlFor="area" className="form-label">
-                  <span className="label-icon">📍</span>
-                  <span className="label-text">Area/Location</span>
-                </label>
-                <div className="input-wrapper">
-                  <input
-                    type="text"
-                    id="area"
-                    name="area"
-                    value={formData.area}
-                    onChange={handleChange}
-                    onFocus={() => setFocused('area')}
-                    onBlur={() => setFocused(null)}
-                    placeholder="Your locality/area"
-                    required
-                    className={focused === 'area' ? 'input-focused' : ''}
-                  />
-                  <span className="input-focus-border"></span>
-                </div>
-                <small className="field-hint">City/Area where pharmacy is located</small>
-              </div>
-            </div>
-          </div>
-
-          <div className="form-section">
-            <h3 className="section-title">⚖️ Legal Information</h3>
-
-            <div className="form-group full-width">
-              <label htmlFor="licenseNumber" className="form-label">
-                <span className="label-icon">📜</span>
-                <span className="label-text">License Number</span>
-              </label>
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  id="licenseNumber"
-                  name="licenseNumber"
-                  value={formData.licenseNumber}
-                  onChange={handleChange}
-                  onFocus={() => setFocused('licenseNumber')}
-                  onBlur={() => setFocused(null)}
-                  placeholder="Pharmacy registration/license number"
-                  required
-                  className={focused === 'licenseNumber' ? 'input-focused' : ''}
-                />
-                <span className="input-focus-border"></span>
-              </div>
-              <small className="field-hint">Government registration number</small>
-            </div>
-
-            <div className="location-section">
-              <div className="location-header">
-                <div>
-                  <label className="section-title">📍 Pharmacy Location</label>
-                  <p className="location-hint">Required for customers to find you</p>
-                </div>
-                <button 
-                  type="button"
-                  className={`btn-location ${locationStatus}`}
-                  onClick={getLocation}
-                  disabled={locationLoading}
-                >
-                  {locationLoading ? '⏳ Getting...' : '📍 Get Location'}
-                </button>
-              </div>
-
-              {locationStatus === 'success' && (
-                <div className="location-display">
-                  <div className="location-pin">✅ Location captured successfully</div>
-                  <div className="location-coordinates">
-                    <p><strong>Latitude:</strong> {formData.latitude?.toFixed(6)}</p>
-                    <p><strong>Longitude:</strong> {formData.longitude?.toFixed(6)}</p>
-                    {formData.address && <p><strong>Address:</strong> {formData.address}</p>}
+              <div className="location-section">
+                <div className="location-header">
+                  <div>
+                    <label className="section-title">📍 Pharmacy Location</label>
+                    <p className="location-hint">Required for customers to find you</p>
                   </div>
-                  <div className="map-preview">
-                    <a 
-                      href={`https://maps.google.com/?q=${formData.latitude},${formData.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="map-link"
-                    >
-                      🗺️ View on Google Maps
-                    </a>
+                  <button
+                    type="button"
+                    className={`btn-location ${locationStatus}`}
+                    onClick={getLocation}
+                    disabled={locationLoading}
+                  >
+                    {locationLoading ? '⏳ Getting...' : '📍 Get Location'}
+                  </button>
+                </div>
+
+                {locationStatus === 'success' && (
+                  <div className="location-display">
+                    <div className="location-pin">✅ Location captured successfully</div>
+                    <div className="location-coordinates">
+                      <p><strong>Latitude:</strong> {formData.latitude?.toFixed(6)}</p>
+                      <p><strong>Longitude:</strong> {formData.longitude?.toFixed(6)}</p>
+                      {formData.address && <p><strong>Address:</strong> {formData.address}</p>}
+                    </div>
+                    <div className="map-preview">
+                      <a
+                        href={`https://maps.google.com/?q=${formData.latitude},${formData.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="map-link"
+                      >
+                        🗺️ View on Google Maps
+                      </a>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {locationStatus === 'pending' && (
-                <div className="location-pending">
-                  ⏳ Requesting location permission... Please allow location access when prompted.
-                </div>
-              )}
+                {locationStatus === 'pending' && (
+                  <div className="location-pending">
+                    ⏳ Requesting location permission... Please allow location access when prompted.
+                  </div>
+                )}
 
-              {locationStatus === 'error' && (
-                <div className="location-error">
-                  ❌ Location access denied. Please enable location in browser settings and try again.
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="form-section">
-            <h3 className="section-title">🔐 Security</h3>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="password" className="form-label">
-                  <span className="label-icon">🔒</span>
-                  <span className="label-text">Password</span>
-                </label>
-                <div className="input-wrapper">
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    onFocus={() => setFocused('password')}
-                    onBlur={() => setFocused(null)}
-                    placeholder="Minimum 6 characters"
-                    required
-                    className={focused === 'password' ? 'input-focused' : ''}
-                  />
-                  <span className="input-focus-border"></span>
-                </div>
-                <small className="field-hint">Strong password recommended</small>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="confpassword" className="form-label">
-                  <span className="label-icon">✓</span>
-                  <span className="label-text">Confirm Password</span>
-                </label>
-                <div className="input-wrapper">
-                  <input
-                    type="password"
-                    id="confpassword"
-                    name="confpassword"
-                    value={formData.confpassword}
-                    onChange={handleChange}
-                    onFocus={() => setFocused('confpassword')}
-                    onBlur={() => setFocused(null)}
-                    placeholder="Re-enter password"
-                    required
-                    className={focused === 'confpassword' ? 'input-focused' : ''}
-                  />
-                  <span className="input-focus-border"></span>
-                </div>
-                <small className="field-hint">Must match password above</small>
+                {locationStatus === 'error' && (
+                  <div className="location-error">
+                    ❌ Location access denied. Please enable location in browser settings and try again.
+                  </div>
+                )}
               </div>
             </div>
-          </div>
 
-          <button 
-            type="submit" 
-            className={`btn btn-primary btn-full btn-login ${loading ? 'btn-loading' : ''}`}
-            disabled={loading}
-          >
-            <span className="btn-icon">📝</span>
-            <span className="btn-text">
-              {loading ? 'Registration in progress...' : 'Complete Registration'}
-            </span>
-            {loading && <span className="btn-spinner"></span>}
-          </button>
-        </form>
+            <div className="form-section">
+              <h3 className="section-title">🔐 Security</h3>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="password" className="form-label">
+                    <span className="label-icon">🔒</span>
+                    <span className="label-text">Password</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('password')}
+                      onBlur={() => setFocused(null)}
+                      placeholder="Minimum 6 characters"
+                      required
+                      className={focused === 'password' ? 'input-focused' : ''}
+                      autoComplete="new-password"
+                      autoCapitalize="off"
+                    />
+                    <span className="input-focus-border"></span>
+                  </div>
+                  <small className="field-hint">Strong password recommended</small>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="confpassword" className="form-label">
+                    <span className="label-icon">✓</span>
+                    <span className="label-text">Confirm Password</span>
+                  </label>
+                  <div className="input-wrapper">
+                    <input
+                      type="password"
+                      id="confpassword"
+                      name="confpassword"
+                      value={formData.confpassword}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('confpassword')}
+                      onBlur={() => setFocused(null)}
+                      placeholder="Re-enter password"
+                      required
+                      className={focused === 'confpassword' ? 'input-focused' : ''}
+                      autoComplete="new-password"
+                      autoCapitalize="off"
+                    />
+                    <span className="input-focus-border"></span>
+                  </div>
+                  <small className="field-hint">Must match password above</small>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className={`btn btn-primary btn-full btn-login ${loading ? 'btn-loading' : ''}`}
+              disabled={loading}
+            >
+              <span className="btn-icon">📝</span>
+              <span className="btn-text">
+                {loading ? 'Registration in progress...' : 'Complete Registration'}
+              </span>
+              {loading && <span className="btn-spinner"></span>}
+            </button>
+          </form>
+        )}
 
         <div className="login-divider">
           <span>Already have an account?</span>
@@ -423,27 +645,29 @@ export default function Register() {
           </a>
         </div>
 
-        <div className="pharmacy-benefits">
-          <p className="benefits-title">Registration Benefits:</p>
-          <div className="benefits-list">
-            <div className="benefit-item">
-              <span className="benefit-icon">👥</span>
-              <span className="benefit-text">Connect with customers</span>
-            </div>
-            <div className="benefit-item">
-              <span className="benefit-icon">📊</span>
-              <span className="benefit-text">Get analytics & insights</span>
-            </div>
-            <div className="benefit-item">
-              <span className="benefit-icon">💰</span>
-              <span className="benefit-text">Increase revenue</span>
-            </div>
-            <div className="benefit-item">
-              <span className="benefit-icon">🎯</span>
-              <span className="benefit-text">Manage inventory online</span>
+        {registerType === 'pharmacy' && (
+          <div className="pharmacy-benefits">
+            <p className="benefits-title">Registration Benefits:</p>
+            <div className="benefits-list">
+              <div className="benefit-item">
+                <span className="benefit-icon">👥</span>
+                <span className="benefit-text">Connect with customers</span>
+              </div>
+              <div className="benefit-item">
+                <span className="benefit-icon">📊</span>
+                <span className="benefit-text">Get analytics & insights</span>
+              </div>
+              <div className="benefit-item">
+                <span className="benefit-icon">💰</span>
+                <span className="benefit-text">Increase revenue</span>
+              </div>
+              <div className="benefit-item">
+                <span className="benefit-icon">🎯</span>
+                <span className="benefit-text">Manage inventory online</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

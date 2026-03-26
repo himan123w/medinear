@@ -41,9 +41,19 @@ echo ""
 
 # Test 3: Server startup (quick test)
 echo "Test 3: Starting server (5 second test)..."
-timeout 5 node server.js 2>&1 & sleep 3
-curl -s http://localhost:5001/ > /dev/null 2>&1 && echo "✅ Server responding" || echo "⚠️  Server startup detected (expected timeout)"
-killall node 2>/dev/null || true
+node server.js > /tmp/medinear-startup-test.log 2>&1 &
+TEST_SERVER_PID=$!
+sleep 3
+
+if curl -s http://localhost:5001/ > /dev/null 2>&1; then
+  echo "✅ Server responding"
+else
+  echo "⚠️  Server did not respond during startup test"
+fi
+
+# Clean up only the process started by this script.
+kill "$TEST_SERVER_PID" 2>/dev/null || true
+wait "$TEST_SERVER_PID" 2>/dev/null || true
 sleep 1
 echo ""
 

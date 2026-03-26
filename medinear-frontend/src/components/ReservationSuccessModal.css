@@ -14,6 +14,7 @@
   z-index: 10000;
   padding: 20px;
   animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 .reservation-success-modal {
@@ -26,6 +27,11 @@
   animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   max-height: 90vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable both-edges;
+  touch-action: pan-y;
 }
 
 /* Success Header */
@@ -321,6 +327,12 @@
   gap: 8px;
 }
 
+.contact-btn:focus-visible,
+.close-modal-btn:focus-visible {
+  outline: 3px solid rgba(102, 126, 234, 0.35);
+  outline-offset: 2px;
+}
+
 .call-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -339,6 +351,14 @@
 .directions-btn:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 28px rgba(77, 171, 247, 0.3);
+}
+
+.contact-btn:disabled,
+.contact-btn.disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* Close Button */

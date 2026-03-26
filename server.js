@@ -175,7 +175,7 @@ let PORT = process.env.PORT || 5001;
 let server;
 
 function startServer(port) {
-  server = app.listen(port, () => {
+  server = app.listen(port, '0.0.0.0', () => {
     console.log(`
 ╔════════════════════════════════════════════════════╗
 ║  🏥 MediNear - Enterprise Medicine Platform       ║
@@ -202,18 +202,10 @@ function startServer(port) {
 
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
-      const nextPort = port + 1;
-      logger.warn(`Port ${port} is already in use, trying port ${nextPort}`, { error: err.message });
-      console.warn(`⚠️  Port ${port} is already in use, trying port ${nextPort}...`);
-      
-      // Try next port automatically (max 5 attempts)
-      if (nextPort - PORT < 5) {
-        startServer(nextPort);
-      } else {
-        logger.error('Unable to find available port after 5 attempts', { error: err.message });
-        console.error('❌ Unable to find available port after 5 attempts');
-        process.exit(1);
-      }
+      logger.error(`Port ${port} is already in use`, { error: err.message, port });
+      console.error(`❌ Port ${port} is already in use.`);
+      console.error('Run `npm run restart` to free port 5001 and start the backend again.');
+      process.exit(1);
     } else {
       logger.error('Server error', { error: err.message, stack: err.stack });
       console.error('Server error:', err);

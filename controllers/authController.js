@@ -148,14 +148,25 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: pharmacy._id },
+      {
+        _id: pharmacy._id,
+        phone: pharmacy.phone,
+        role: 'pharmacy',
+        name: pharmacy.name
+      },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
     res.json({
       message: "Login successful",
-      token
+      token,
+      pharmacy: {
+        _id: pharmacy._id,
+        name: pharmacy.name,
+        phone: pharmacy.phone,
+        role: 'pharmacy'
+      }
     });
 
   } catch (error) {

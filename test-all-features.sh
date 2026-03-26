@@ -46,8 +46,8 @@ test_endpoint "Root Endpoint" "http://localhost:5001/"
 echo -e "\n${YELLOW}2️⃣  Testing Pharmacy Endpoints${NC}"
 echo "------------------------------------------------------"
 test_endpoint "Get All Pharmacies" "$BASE_URL/pharmacy"
-test_endpoint "Nearby Pharmacies" "$BASE_URL/pharmacy/nearby?lat=28.6139&lng=77.2090&radius=10"
-test_endpoint "Emergency Pharmacies" "$BASE_URL/pharmacy/emergency"
+test_endpoint "Nearby Pharmacies" "$BASE_URL/pharmacy/nearby?latitude=28.6139&longitude=77.2090&maxDistance=10000"
+test_endpoint "Emergency Pharmacies" "$BASE_URL/pharmacy/emergency?latitude=28.6139&longitude=77.2090&radius=10"
 test_endpoint "Pharmacies with Status" "$BASE_URL/pharmacy/with-status"
 
 echo -e "\n${YELLOW}3️⃣  Testing Medicine Endpoints${NC}"
@@ -55,7 +55,7 @@ echo "------------------------------------------------------"
 test_endpoint "Medicine Search" "$BASE_URL/medicine/search?query=paracetamol"
 test_endpoint "Best Medicines" "$BASE_URL/medicine/best"
 test_endpoint "Medicine Recommendations" "$BASE_URL/medicine/recommendations"
-test_endpoint "Nearby Medicines" "$BASE_URL/medicine/nearby?lat=28.6139&lng=77.2090&radius=10"
+test_endpoint "Nearby Medicines" "$BASE_URL/medicine/nearby?latitude=28.6139&longitude=77.2090&radius=10"
 
 echo -e "\n${YELLOW}4️⃣  Testing Category Endpoints${NC}"
 echo "------------------------------------------------------"
@@ -65,10 +65,22 @@ test_endpoint "Vitamins Category" "$BASE_URL/medicine/category/Vitamins"
 
 echo -e "\n${YELLOW}5️⃣  Testing Authentication${NC}"
 echo "------------------------------------------------------"
+# Ensure test user exists (safe to call repeatedly)
+REGISTER_RESPONSE=$(curl -s -X POST "$BASE_URL/auth/user/register" \
+    -H "Content-Type: application/json" \
+    -d '{"name":"Test User","email":"user@test.com","phone":"9999999999","password":"user123"}')
+
 # Test Login
 LOGIN_RESPONSE=$(curl -s -X POST "$BASE_URL/auth/login" \
   -H "Content-Type: application/json" \
-  -d '{"email":"user@test.com","password":"user123"}')
+    -d '{"phone":"9999999999","password":"user123"}')
+
+# Fallback to user login route if pharmacy login route fails
+if ! echo "$LOGIN_RESPONSE" | grep -q "token"; then
+    LOGIN_RESPONSE=$(curl -s -X POST "$BASE_URL/auth/user/login" \
+        -H "Content-Type: application/json" \
+        -d '{"email":"user@test.com","password":"user123"}')
+fi
 
 if echo "$LOGIN_RESPONSE" | grep -q "token"; then
     echo -e "User Login: ${GREEN}✅ PASS${NC}"
@@ -107,7 +119,7 @@ test_endpoint "Reservation Stats" "$BASE_URL/reservations/stats"
 
 echo -e "\n${YELLOW}8️⃣  Testing Analytics${NC}"
 echo "------------------------------------------------------"
-test_endpoint "Inventory Analytics" "$BASE_URL/analytics/inventory"
+test_endpoint "Area Heatmap Analytics" "$BASE_URL/analytics/heatmap/area"
 
 echo -e "\n======================================================"
 echo "📊 Test Results"

@@ -16,18 +16,17 @@
 /* ================================== */
 
 .btn,
-button,
 .button-primary,
 .btn-primary,
 .reserve-btn,
 .search-btn {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s var(--transition-smooth);
+  transition: transform 0.24s var(--transition-smooth), box-shadow 0.24s var(--transition-smooth), filter 0.24s var(--transition-smooth);
+  will-change: transform;
 }
 
 .btn:hover:not(:disabled),
-button:hover:not(:disabled),
 .button-primary:hover:not(:disabled),
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
@@ -36,9 +35,10 @@ button:hover:not(:disabled),
 }
 
 .btn:active:not(:disabled),
-button:active:not(:disabled) {
+.button-primary:active:not(:disabled),
+.btn-primary:active:not(:disabled) {
   transform: translateY(0);
-  transition: all 0.1s var(--transition-smooth);
+  transition: transform 0.1s var(--transition-smooth);
 }
 
 /* Success Button Glow */
@@ -57,7 +57,8 @@ button:active:not(:disabled) {
 
 /* Shimmer Effect on Hover */
 .btn::before,
-button::before {
+.button-primary::before,
+.btn-primary::before {
   content: '';
   position: absolute;
   top: 0;
@@ -74,7 +75,8 @@ button::before {
 }
 
 .btn:hover::before,
-button:hover::before {
+.button-primary:hover::before,
+.btn-primary:hover::before {
   left: 100%;
 }
 
@@ -90,8 +92,9 @@ button:hover::before {
 .stat-card,
 .delivery-card,
 .prescription-card {
-  transition: all 0.3s var(--transition-smooth);
+  transition: transform 0.28s var(--transition-smooth), box-shadow 0.28s var(--transition-smooth);
   cursor: pointer;
+  will-change: transform;
 }
 
 .card:hover,
@@ -112,7 +115,41 @@ button:hover::before {
 .pharmacy-card:active,
 .medicine-card:active {
   transform: translateY(-4px) scale(0.99);
-  transition: all 0.1s var(--transition-smooth);
+  transition: transform 0.1s var(--transition-smooth);
+}
+
+/* Avoid costly hover animation behaviors on touch devices */
+@media (hover: none) {
+  .btn:hover:not(:disabled),
+  .button-primary:hover:not(:disabled),
+  .btn-primary:hover:not(:disabled),
+  .card:hover,
+  .pharmacy-card:hover,
+  .medicine-card:hover,
+  .result-card:hover,
+  .dashboard-card:hover,
+  .stat-card:hover,
+  .delivery-card:hover,
+  .prescription-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn::before,
+  .button-primary::before,
+  .btn-primary::before {
+    display: none;
+  }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* ================================== */

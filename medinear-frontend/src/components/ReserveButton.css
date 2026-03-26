@@ -14,6 +14,22 @@
   align-items: center;
   gap: 8px;
   justify-content: center;
+  width: 100%;
+  text-align: center;
+  line-height: 1.3;
+  min-height: 48px;
+  white-space: normal;
+  overflow: visible;
+  word-break: break-word;
+}
+
+.reserve-button-icon {
+  flex-shrink: 0;
+  font-size: 1.05em;
+}
+
+.reserve-button-label {
+  min-width: 0;
 }
 
 .reserve-button:hover:not(:disabled) {
@@ -25,22 +41,29 @@
   transform: translateY(0);
 }
 
+.reserve-button:focus-visible {
+  outline: 3px solid rgba(102, 126, 234, 0.35);
+  outline-offset: 2px;
+}
+
 .reserve-button:disabled {
   background: #ccc;
   cursor: not-allowed;
   box-shadow: none;
 }
 
-/* Modal Container */
-.reserve-modal-container {
-  position: relative;
-  z-index: 1001;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.reserve-error-inline {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #ffe6e6;
+  color: #b42318;
+  font-size: 13px;
+  font-weight: 600;
+  border-left: 4px solid #ff4d4f;
 }
 
-/* Medicine Badge - Outside the box */
+/* Medicine Badge */
 .medicine-badge-outside {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -49,11 +72,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: -1px;
-  box-shadow: 0 -8px 24px rgba(102, 126, 234, 0.2);
-  z-index: 1001;
-  max-width: 500px;
-  width: 90%;
+  margin-bottom: 0;
+  box-shadow: none;
+  width: 100%;
   animation: slideDown 0.3s ease;
 }
 
@@ -94,9 +115,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1200;
+  padding: 16px;
   backdrop-filter: blur(4px);
   animation: fadeIn 0.2s ease;
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 @keyframes fadeIn {
@@ -111,13 +135,16 @@
 /* Modal */
 .reserve-modal {
   background: white;
-  border-radius: 0 0 16px 16px;
+  border-radius: 16px;
   max-width: 500px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
+  width: min(500px, 100%);
+  max-height: min(92vh, 760px);
+  overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
 }
 
 @keyframes slideUp {
@@ -166,8 +193,20 @@
 /* Modal Body */
 .reserve-modal-body {
   padding: 24px;
-  max-height: calc(90vh - 140px);
+  max-height: none;
   overflow-y: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable both-edges;
+  touch-action: pan-y;
+}
+
+@supports (height: 100dvh) {
+  .reserve-modal {
+    max-height: calc(100dvh - 32px);
+  }
 }
 
 /* Medicine Info Card */
@@ -629,10 +668,20 @@
 
 /* Responsive Design */
 @media (max-width: 600px) {
+  .reserve-button {
+    padding: 12px 14px;
+    gap: 6px;
+    min-height: 52px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+
+  .reserve-button-label {
+    line-height: 1.25;
+  }
+
   .medicine-badge-outside {
-    width: 96%;
     padding: 14px 20px;
-    margin-bottom: -2px;
     border-radius: 10px 10px 0 0;
   }
 
@@ -645,9 +694,20 @@
   }
 
   .reserve-modal {
-    width: 96%;
-    margin: 10px;
-    max-height: 95vh;
+    width: 100%;
+    max-height: 94vh;
+    border-radius: 12px;
+  }
+
+  .reserve-modal-overlay {
+    align-items: flex-start;
+    padding: 8px;
+  }
+
+  @supports (height: 100dvh) {
+    .reserve-modal {
+      max-height: calc(100dvh - 16px);
+    }
   }
 
   .reserve-modal-header {
@@ -729,6 +789,7 @@
     padding: 16px 20px;
     flex-direction: column;
     gap: 10px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
 
   .cancel-button,
@@ -748,6 +809,12 @@
 }
 
 @media (max-width: 400px) {
+  .reserve-button {
+    font-size: 14px;
+    padding: 10px 12px;
+    min-height: 50px;
+  }
+
   .reserve-modal-body {
     padding: 16px;
   }

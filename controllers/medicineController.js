@@ -318,15 +318,17 @@ exports.incrementViews = async (req, res) => {
 // ===============================
 exports.getNearbyMedicines = async (req, res) => {
   try {
-    const { medicineName, latitude, longitude, radius = 5 } = req.query;
+    const { medicineName, latitude, longitude, lat, lng, radius = 5 } = req.query;
     const { sortBy = 'nearest' } = req.query;
+    const resolvedLatitude = latitude ?? lat;
+    const resolvedLongitude = longitude ?? lng;
 
-    if (!latitude || !longitude) {
+    if (!resolvedLatitude || !resolvedLongitude) {
       return res.status(400).json({ message: "Latitude and longitude are required" });
     }
 
-    const lat = parseFloat(latitude);
-    const lng = parseFloat(longitude);
+    const latValue = parseFloat(resolvedLatitude);
+    const lngValue = parseFloat(resolvedLongitude);
     const radiusKm = parseFloat(radius);
 
     // Haversine formula to calculate distance
@@ -362,8 +364,8 @@ exports.getNearbyMedicines = async (req, res) => {
           return false;
         }
         const distance = calculateDistance(
-          lat,
-          lng,
+          latValue,
+          lngValue,
           medicine.pharmacy.latitude,
           medicine.pharmacy.longitude
         );
@@ -371,8 +373,8 @@ exports.getNearbyMedicines = async (req, res) => {
       })
       .map(medicine => {
         const distance = calculateDistance(
-          lat,
-          lng,
+          latValue,
+          lngValue,
           medicine.pharmacy.latitude,
           medicine.pharmacy.longitude
         );

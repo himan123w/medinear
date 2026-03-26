@@ -12,10 +12,16 @@ export default function TopNavBar() {
   const navigate = useNavigate();
   const [showSettings, setShowSettings] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  // Close mobile menu on link click
+  const handleMobileNavClick = () => {
+    setShowMobileMenu(false);
   };
 
   return (
@@ -130,12 +136,51 @@ export default function TopNavBar() {
             )}
 
             {/* Mobile Menu Toggle */}
-            <button className="mobile-menu-btn" aria-label="Toggle mobile menu">
+            <button 
+              className="mobile-menu-btn" 
+              aria-label="Toggle mobile menu"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+            >
               ☰
             </button>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu Dropdown */}
+      {showMobileMenu && (
+        <div className="mobile-menu">
+          {user && (
+            <>
+              <Link to="/dashboard" className="mobile-menu-item" onClick={handleMobileNavClick}>
+                📊 Dashboard
+              </Link>
+              <Link to="/prescriptions" className="mobile-menu-item" onClick={handleMobileNavClick}>
+                📋 Prescriptions
+              </Link>
+              <Link to="/subscriptions" className="mobile-menu-item" onClick={handleMobileNavClick}>
+                🔄 Subscriptions
+              </Link>
+              <Link to="/delivery" className="mobile-menu-item" onClick={handleMobileNavClick}>
+                🚚 Delivery
+              </Link>
+              <Link to="/analytics/heatmap" className="mobile-menu-item" onClick={handleMobileNavClick}>
+                📊 Heatmap
+              </Link>
+              {user.role === 'admin' && (
+                <Link to="/admin" className="mobile-menu-item admin-mobile" onClick={handleMobileNavClick}>
+                  🛡️ Admin Panel
+                </Link>
+              )}
+              {user.role === 'pharmacy' && (
+                <Link to="/pharmacy" className="mobile-menu-item pharmacy-mobile" onClick={handleMobileNavClick}>
+                  🏥 Pharmacy Dashboard
+                </Link>
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       {/* Settings Modal */}
       <Settings isOpen={showSettings} onClose={() => setShowSettings(false)} />

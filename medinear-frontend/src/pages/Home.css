@@ -86,6 +86,7 @@ body {
 
 .home-container {
   min-height: 100vh;
+  min-height: 100dvh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
   background-size: 200% 200%;
   animation: gradientShift 15s ease infinite;
@@ -113,7 +114,7 @@ body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   animation: slideInDown 0.5s var(--bounce-ease);
-  transition: all 0.3s var(--smooth-ease);
+  transition: background-color 0.25s var(--smooth-ease), box-shadow 0.25s var(--smooth-ease);
 }
 
 .top-feature-controls:hover {
@@ -400,7 +401,7 @@ body {
   cursor: pointer;
   font-size: 16px;
   font-weight: 700;
-  transition: all 0.4s var(--smooth-ease);
+  transition: transform 0.25s var(--smooth-ease), box-shadow 0.25s var(--smooth-ease), background-color 0.25s var(--smooth-ease), border-color 0.25s var(--smooth-ease), color 0.25s var(--smooth-ease);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 15px;
@@ -429,7 +430,7 @@ body {
 .tab-btn:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: white;
-  transform: translateY(-4px) scale(1.05);
+  transform: translateY(-2px) scale(1.02);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
@@ -438,8 +439,18 @@ body {
   color: #667eea;
   border-color: white;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 0 30px rgba(255, 255, 255, 0.5);
-  transform: translateY(-3px) scale(1.05);
-  animation: tabPulse 2s ease-in-out infinite;
+  transform: translateY(-2px) scale(1.02);
+  animation: none;
+}
+
+.tab-btn:focus-visible,
+.search-input:focus-visible,
+.filter-select:focus-visible,
+.category-card:focus-visible,
+.city-btn:focus-visible,
+.radius-btn:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
 }
 
 @keyframes tabPulse {
@@ -500,7 +511,7 @@ body {
   font-size: 16px;
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.4s var(--smooth-ease);
+  transition: transform 0.22s var(--smooth-ease), box-shadow 0.22s var(--smooth-ease), border-color 0.22s var(--smooth-ease), background-color 0.22s var(--smooth-ease);
   color: #333;
   font-weight: 500;
   letter-spacing: 0.3px;
@@ -612,7 +623,8 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
   margin-bottom: 40px;
-  animation: fadeIn 0.4s var(--smooth-ease);
+  animation: fadeIn 0.35s var(--smooth-ease);
+  contain: layout paint;
 }
 
 .medicines-grid > *:nth-child(1) { animation: fadeInUp 0.4s var(--smooth-ease) 0.05s both; }
@@ -628,7 +640,7 @@ body {
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03);
-  transition: all 0.5s var(--smooth-ease);
+  transition: transform 0.28s var(--smooth-ease), box-shadow 0.28s var(--smooth-ease), border-color 0.28s var(--smooth-ease);
   display: flex;
   flex-direction: column;
   border: 2px solid transparent;
@@ -672,7 +684,7 @@ body {
 }
 
 .medicine-card:hover {
-  transform: translateY(-15px) scale(1.03);
+  transform: translateY(-6px) scale(1.01);
   box-shadow: 0 25px 60px rgba(102, 126, 234, 0.35),
               0 15px 35px rgba(0, 0, 0, 0.15),
               0 0 0 1px rgba(102, 126, 234, 0.2);
@@ -813,7 +825,7 @@ body {
 
 .medicine-actions .reserve-button {
   flex: 1.5;
-  font-size: 13px;
+  font-size: clamp(14px, 1.8vw, 16px);
 }
 
 .badge {
@@ -1138,7 +1150,7 @@ body {
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03);
-  transition: all 0.5s var(--smooth-ease);
+  transition: transform 0.28s var(--smooth-ease), box-shadow 0.28s var(--smooth-ease), border-color 0.28s var(--smooth-ease);
   animation: fadeInScale 0.6s var(--bounce-ease);
   cursor: pointer;
   position: relative;
@@ -1193,7 +1205,7 @@ body {
 }
 
 .pharmacy-card:hover {
-  transform: translateY(-12px) scale(1.02);
+  transform: translateY(-5px) scale(1.01);
   box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3),
               0 10px 20px rgba(0, 0, 0, 0.1);
 }
@@ -1664,6 +1676,8 @@ body {
   flex: 1;
   padding: 40px;
   overflow-y: auto;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1200px;
 }
 
 /* Categories Section */
@@ -1671,6 +1685,8 @@ body {
   flex: 1;
   padding: 40px;
   overflow-y: auto;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
 }
 
 .categories-header {
@@ -1704,7 +1720,7 @@ body {
   padding: 24px;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.22s var(--smooth-ease), box-shadow 0.22s var(--smooth-ease);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1714,7 +1730,7 @@ body {
 }
 
 .category-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-4px);
   box-shadow: 0 12px 28px rgba(102, 126, 234, 0.25);
 }
 
@@ -1924,6 +1940,8 @@ body {
   flex: 1;
   padding: 40px;
   overflow-y: auto;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1200px;
 }
 
 .location-header {
@@ -2037,7 +2055,7 @@ body {
 }
 
 .city-btn:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(52, 168, 83, 0.3);
   background: linear-gradient(135deg, #37b24d 0%, #2f9e44 100%);
 }
@@ -2189,7 +2207,42 @@ body {
 .radius-btn:hover {
   border-color: white;
   background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+}
+
+@media (hover: none) {
+  .tab-btn:hover,
+  .medicine-card:hover,
+  .pharmacy-card:hover,
+  .category-card:hover,
+  .city-btn:hover,
+  .radius-btn:hover,
+  .search-input:hover,
+  .filter-select:hover {
+    transform: none;
+  }
+
+  .tab-btn::before,
+  .btn::before,
+  .pharmacy-filter-buttons .filter-btn::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-container,
+  .header,
+  .top-feature-controls,
+  .tabs,
+  .medicines-grid,
+  .pharmacy-card,
+  .medicine-card,
+  .category-card,
+  .city-btn,
+  .radius-btn {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 .radius-btn.active {

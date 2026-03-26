@@ -13,8 +13,18 @@ const ReservationSuccessModal = ({
   const [timeRemaining, setTimeRemaining] = useState('30:00');
   const [isExpired, setIsExpired] = useState(false);
 
+  const phoneNumber = pharmacy?.phone || '';
+  const hasPhone = Boolean(phoneNumber);
+  const lat = pharmacy?.geolocation?.coordinates?.[1] ?? pharmacy?.latitude;
+  const lon = pharmacy?.geolocation?.coordinates?.[0] ?? pharmacy?.longitude;
+  const hasDirections = Number.isFinite(Number(lat)) && Number.isFinite(Number(lon));
+
   useEffect(() => {
     if (!isOpen || !expiryTime) return;
+
+    const initialSeconds = getTimeUntilExpiry(expiryTime);
+    setIsExpired(initialSeconds <= 0);
+    setTimeRemaining(initialSeconds <= 0 ? '0:00' : formatTimeRemaining(initialSeconds));
 
     const interval = setInterval(() => {
       const seconds = getTimeUntilExpiry(expiryTime);
@@ -31,9 +41,25 @@ const ReservationSuccessModal = ({
     return () => clearInterval(interval);
   }, [isOpen, expiryTime]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        onClose?.();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const endTimeFormatted = formatExpiredTime(expiryTime);
+  const progressPercentage = Math.max(0, Math.min(100, (getTimeUntilExpiry(expiryTime) / (30 * 60)) * 100));
 
   return (
     <div className="reservation-success-overlay" onClick={onClose}>
@@ -62,7 +88,7 @@ const ReservationSuccessModal = ({
                 <div 
                   className="progress-fill"
                   style={{
-                    width: `${(getTimeUntilExpiry(expiryTime) / (30 * 60)) * 100}%`
+                    width: `${progressPercentage}%`
                   }}
                 ></div>
               </div>
@@ -125,22 +151,33 @@ const ReservationSuccessModal = ({
 
         {/* Pharmacy Contact */}
         <div className="pharmacy-contact">
-          <a href={`tel:${pharmacy?.phone}`} className="contact-btn call-btn">
-            📞 Call Pharmacy
-          </a>
-          <button className="contact-btn directions-btn" onClick={() => {
-            if (pharmacy?.geolocation?.coordinates) {
-              const lon = pharmacy.geolocation.coordinates[0];
-              const lat = pharmacy.geolocation.coordinates[1];
+          {hasPhone ? (
+            <a href={`tel:${phoneNumber}`} className="contact-btn call-btn" aria-label={`Call ${pharmacy?.name || 'pharmacy'}`}>
+              📞 Call Pharmacy
+            </a>
+          ) : (
+            <button className="contact-btn call-btn disabled" type="button" disabled>
+              📞 Phone Unavailable
+            </button>
+          )}
+          <button
+            className="contact-btn directions-btn"
+            type="button"
+            aria-label={`Get directions to ${pharmacy?.name || 'pharmacy'}`}
+            onClick={() => {
+              if (!hasDirections) {
+                return;
+              }
               window.open(`https://maps.google.com/?q=${lat},${lon}`, '_blank');
-            }
-          }}>
+            }}
+            disabled={!hasDirections}
+          >
             📍 Get Directions
           </button>
         </div>
 
         {/* Close Button */}
-        <button className="close-modal-btn" onClick={onClose}>
+        <button className="close-modal-btn" onClick={onClose} type="button" aria-label="Close reservation success modal">
           ✕ Close
         </button>
       </div>

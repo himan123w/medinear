@@ -54,6 +54,8 @@ export default function PharmacyMapView({ compact = false, medicineName = '' }) 
   }, [token, medicineName]);
 
   const requestUserLocation = () => {
+    const fallbackLocation = { latitude: 40.7128, longitude: -74.0060 };
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -65,17 +67,21 @@ export default function PharmacyMapView({ compact = false, medicineName = '' }) 
           fetchNearbyPharmacies(location);
         },
         () => {
-          // Fallback to default location if not available
-          setUserLocation({ latitude: 40.7128, longitude: -74.0060 });
+          // Fallback to a known location so map data still loads.
+          setUserLocation(fallbackLocation);
+          fetchNearbyPharmacies(fallbackLocation);
         }
       );
+    } else {
+      setUserLocation(fallbackLocation);
+      fetchNearbyPharmacies(fallbackLocation);
     }
   };
 
   const fetchNearbyPharmacies = async (location) => {
     try {
       setLoading(true);
-      const response = await api.get('/api/pharmacy/nearby', {
+      const response = await api.get('/pharmacy/nearby', {
         params: {
           latitude: location.latitude,
           longitude: location.longitude,

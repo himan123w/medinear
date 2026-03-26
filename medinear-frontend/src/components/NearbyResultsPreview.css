@@ -287,11 +287,14 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  white-space: nowrap;
+  white-space: normal;
   min-height: 44px;
   text-transform: none;
   letter-spacing: 0.3px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  line-height: 1.25;
+  touch-action: manipulation;
+  text-align: center;
 }
 
 .action-btn:hover {
@@ -346,6 +349,12 @@
 
 .btn-label {
   font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.action-btn:focus-visible {
+  outline: 3px solid rgba(102, 126, 234, 0.35);
+  outline-offset: 2px;
 }
 
 /* Results Footer */
@@ -577,17 +586,19 @@
   }
 
   .detail-buttons {
-    gap: 6px;
+    gap: 8px;
+    flex-direction: column;
   }
 
   .action-btn {
-    padding: 8px 10px;
-    font-size: 11px;
-    min-height: 36px;
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 13px;
+    min-height: 48px;
   }
 
   .btn-label {
-    display: none;
+    display: inline;
   }
 
   .result-details {
@@ -615,9 +626,9 @@
   }
 
   .action-btn {
-    padding: 6px 8px;
-    font-size: 10px;
-    min-height: 34px;
+    padding: 8px 10px;
+    font-size: 12px;
+    min-height: 44px;
   }
 }
 

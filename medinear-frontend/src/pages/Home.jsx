@@ -25,6 +25,8 @@ import {
 } from '../utils/smartNotifications';
 import './Home.css';
 
+let hasBootstrappedHomeInDev = false;
+
 export default function Home() {
   const { user, token } = useAuth();
   const navigate = useNavigate();
@@ -49,6 +51,7 @@ export default function Home() {
   const [userRatings, setUserRatings] = useState({});
   const [pharmacyStatusFilter, setPharmacyStatusFilter] = useState('all'); // all, open, closed, closing-soon, 24x7
   const featureSectionRef = useRef(null);
+  const networkWarningShownRef = useRef(false);
   
   // Reserved medicines tracking (medicineId -> expiryTime)
   const [reservedMedicines, setReservedMedicines] = useState({});
@@ -65,9 +68,15 @@ export default function Home() {
   const categories = ['Antibiotics', 'Pain Relief', 'Cold & Flu', 'Vitamins', 'Digestive', 'Skin Care'];
 
   useEffect(() => {
-    loadPharmacies();
-    loadBestMedicines();
-    loadRecommendations();
+    const shouldSkipBootstrap = import.meta.env.DEV && hasBootstrappedHomeInDev;
+    if (!shouldSkipBootstrap) {
+      hasBootstrappedHomeInDev = true;
+      loadBestMedicines();
+      loadRecommendations();
+
+      const initialDeviceId = getOrCreateDeviceId();
+      checkPriceDropAlerts(initialDeviceId);
+    }
 
     // Do not auto-prompt notification permission on mount; browsers require user gesture.
     if (typeof Notification !== 'undefined') {
@@ -75,7 +84,6 @@ export default function Home() {
     }
 
     const deviceId = getOrCreateDeviceId();
-    checkPriceDropAlerts(deviceId);
     const priceDropInterval = setInterval(() => checkPriceDropAlerts(deviceId), 2 * 60 * 1000);
 
     if (token) {
@@ -166,12 +174,29 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pharmacyStatusFilter]);
 
+  const getErrorMessage = (error, fallback = 'Request failed') => {
+    if (error?.message) return error.message;
+    if (error?.originalError?.message) return error.originalError.message;
+    return fallback;
+  };
+
+  const notifyNetworkIssueOnce = () => {
+    if (networkWarningShownRef.current) return;
+    networkWarningShownRef.current = true;
+    showNotification('Backend server is not reachable. Retrying in background.', 'warning');
+  };
+
   const loadBestMedicines = async () => {
     try {
       const response = await medicineAPI.getBestMedicines(8);
       setBestMedicines(response.data);
     } catch (error) {
-      console.error('Error loading best medicines:', error);
+      setBestMedicines([]);
+      if (error?.isNetworkError) {
+        notifyNetworkIssueOnce();
+        return;
+      }
+      console.warn('Error loading best medicines:', getErrorMessage(error, 'Unknown error'));
     }
   };
 
@@ -180,7 +205,12 @@ export default function Home() {
       const response = await medicineAPI.getRecommendations(8);
       setRecommendedMedicines(response.data);
     } catch (error) {
-      console.error('Error loading recommendations:', error);
+      setRecommendedMedicines([]);
+      if (error?.isNetworkError) {
+        notifyNetworkIssueOnce();
+        return;
+      }
+      console.warn('Error loading recommendations:', getErrorMessage(error, 'Unknown error'));
     }
   };
 
@@ -323,7 +353,11 @@ export default function Home() {
         await medicineAPI.markAllPriceDropAlertsRead(deviceId);
       }
     } catch (error) {
-      console.error('Error checking price drop alerts:', error);
+      if (error?.isNetworkError) {
+        notifyNetworkIssueOnce();
+        return;
+      }
+      console.warn('Error checking price drop alerts:', getErrorMessage(error, 'Unknown error'));
     }
   };
 
@@ -687,13 +721,13 @@ export default function Home() {
 
       <div ref={featureSectionRef} className="feature-content-anchor">
       {activeTab === 'home' && (
-        <div className="home-section">
+        <div className="home-section fade-in-up">
           {/* Best Medicines Section */}
           {bestMedicines.length > 0 && (
             <div className="featured-section">
               <h2>⭐ Best Rated Medicines</h2>
               <p className="section-subtitle">Highest rated medicines from our customers</p>
-              <div className="medicines-grid">
+              <div className="medicines-grid fade-in-stagger">
                 {bestMedicines.map((medicine) => {
                   const pharmacyDistanceInfo = userLocation.latitude && userLocation.longitude
                     ? getPharmacyDistanceInfo(medicine.pharmacy, userLocation.latitude, userLocation.longitude)
@@ -727,7 +761,7 @@ export default function Home() {
             <div className="featured-section">
               <h2>🔥 Trending Recommendations</h2>
               <p className="section-subtitle">Popular medicines trending in your area</p>
-              <div className="medicines-grid">
+              <div className="medicines-grid fade-in-stagger">
                 {recommendedMedicines.map((medicine) => {
                   const pharmacyDistanceInfo = userLocation.latitude && userLocation.longitude
                     ? getPharmacyDistanceInfo(medicine.pharmacy, userLocation.latitude, userLocation.longitude)
@@ -766,13 +800,13 @@ export default function Home() {
       )}
 
       {activeTab === 'categories' && (
-        <div className="categories-section">
+        <div className="categories-section fade-in-up">
           <div className="categories-header">
             <h2>📋 Browse by Category</h2>
             <p className="categories-subtitle">Select a category to find medicines</p>
           </div>
           
-          <div className="categories-showcase">
+          <div className="categories-showcase fade-in-stagger">
             {categories.map(category => (
               <button
                 key={category}
@@ -789,7 +823,7 @@ export default function Home() {
       )}
 
       {activeTab === 'near-me' && (
-        <div className="near-me-section">
+        <div className="near-me-section fade-in-up">
           <div className="location-header">
             <h2>📍 Find Medicines Near Me</h2>
             <button 
