@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import './AIDemandInsights.css';
 
 const AIDemandInsights = () => {
@@ -15,10 +15,7 @@ const AIDemandInsights = () => {
   const fetchDashboard = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get('/api/ai/demand/dashboard', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/ai/demand/dashboard');
       
       if (response.data.success) {
         setDashboard(response.data.dashboard);
@@ -34,10 +31,7 @@ const AIDemandInsights = () => {
   const refreshPredictions = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      await axios.post('/api/ai/demand/refresh', {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post('/ai/demand/refresh');
       
       await fetchDashboard();
       alert('✅ Predictions refreshed successfully!');

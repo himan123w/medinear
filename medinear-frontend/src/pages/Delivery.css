@@ -25,7 +25,9 @@
 .delivery-header p {
   margin: 0;
   font-size: 16px;
-  opacity: 0.9;
+  display: block;
+  color: #ffffff;
+  opacity: 1;
 }
 
 /* Role Selector */

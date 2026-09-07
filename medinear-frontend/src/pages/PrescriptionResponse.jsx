@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { prescriptionAPI } from '../api';
+import { getAssetUrl, prescriptionAPI } from '../api';
 import { useAuth } from '../AuthContext';
 import './Prescription.css';
 
@@ -150,7 +150,7 @@ export default function PrescriptionResponse() {
                 <div className="prescription-preview">
                   <div className="preview-image">
                     <img
-                      src={`http://localhost:5001/prescriptions/${prescription.prescriptionImage}`}
+                      src={getAssetUrl(`prescriptions/${prescription.prescriptionImage}`)}
                       alt="Prescription"
                       onError={(e) => {
                         e.target.src = 'https://via.placeholder.com/150x200?text=Rx';

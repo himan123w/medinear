@@ -3,11 +3,7 @@
 # MediNear - Comprehensive Feature Test Script
 # Tests all major features of the platform
 
-echo "======================================================"
-echo "🏥 MediNear - Comprehensive Feature Test"
-echo "======================================================"
-
-BASE_URL="http://localhost:5001/api"
+BASE_URL="http://localhost:${PORT:-5001}/api"
 
 # Color codes
 GREEN='\033[0;32m'
@@ -41,7 +37,7 @@ test_endpoint() {
 echo -e "\n${YELLOW}1️⃣  Testing Health & Status Endpoints${NC}"
 echo "------------------------------------------------------"
 test_endpoint "Health Check" "$BASE_URL/health"
-test_endpoint "Root Endpoint" "http://localhost:5001/"
+test_endpoint "Root Endpoint" "http://localhost:${PORT:-5001}/"
 
 echo -e "\n${YELLOW}2️⃣  Testing Pharmacy Endpoints${NC}"
 echo "------------------------------------------------------"

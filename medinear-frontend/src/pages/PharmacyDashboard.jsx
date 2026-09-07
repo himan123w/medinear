@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
-import axios from 'axios';
+import api from '../api';
 import './PharmacyDashboard.css';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
-
 function PharmacyDashboard() {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
   const { showToast } = useToast?.() || {};
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(false);
@@ -57,10 +55,7 @@ function PharmacyDashboard() {
   const fetchPharmacyStats = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${API_BASE}/pharmacy/${user?.pharmacyId || user?._id}/stats`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await api.get(`/pharmacy/${user?.pharmacyId || user?._id}/stats`);
       setPharmacyStats(response.data.data);
     } catch (error) {
       showToast?.('Failed to fetch pharmacy stats', 'error');
@@ -81,10 +76,9 @@ function PharmacyDashboard() {
   const fetchMedicines = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${API_BASE}/medicine?pharmacyId=${user?.pharmacyId || user?._id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await api.get('/medicine', {
+        params: { pharmacyId: user?.pharmacyId || user?._id }
+      });
       setMedicines(response.data.data || []);
     } catch (error) {
       showToast?.('Failed to fetch medicines', 'error');
@@ -96,10 +90,12 @@ function PharmacyDashboard() {
   const fetchReservations = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${API_BASE}/reservations?pharmacyId=${user?.pharmacyId || user?._id}&status=${filterStatus === 'all' ? '' : filterStatus}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await api.get('/reservations', {
+        params: {
+          pharmacyId: user?.pharmacyId || user?._id,
+          status: filterStatus === 'all' ? '' : filterStatus
+        }
+      });
       setReservations(response.data.data || []);
     } catch (error) {
       showToast?.('Failed to fetch reservations', 'error');
@@ -111,10 +107,9 @@ function PharmacyDashboard() {
   const fetchRatings = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${API_BASE}/rating?pharmacyId=${user?.pharmacyId || user?._id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await api.get('/rating', {
+        params: { pharmacyId: user?.pharmacyId || user?._id }
+      });
       setRatings(response.data.data || []);
     } catch (error) {
       showToast?.('Failed to fetch ratings', 'error');

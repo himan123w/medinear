@@ -14,6 +14,9 @@ export default function Dashboard() {
   const [editingId, setEditingId] = useState(null);
   const [editingStock, setEditingStock] = useState(null);
   const [notification, setNotification] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [stockFilter, setStockFilter] = useState('all');
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -193,6 +196,26 @@ export default function Dashboard() {
     return { status: 'good', label: '✅ Good', color: '#51cf66' };
   };
 
+  const filteredMedicines = medicines.filter((medicine) => {
+    const matchesSearch = medicine.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = categoryFilter === 'all' || (medicine.category || 'Other') === categoryFilter;
+    const matchesStock = stockFilter === 'all' || getStockStatus(medicine).status === stockFilter;
+    return matchesSearch && matchesCategory && matchesStock;
+  });
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setCategoryFilter('all');
+    setStockFilter('all');
+  };
+
+  const handleQuickFilter = (filter) => {
+    setSearchTerm('');
+    setCategoryFilter('all');
+    setStockFilter(filter);
+    document.querySelector('.medicines-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   const resetForm = () => {
     setFormData({
       name: '',
@@ -227,74 +250,61 @@ export default function Dashboard() {
       <header className="dashboard-header">
         <div className="header-top">
           <div className="header-content">
-            <h1>💊 Pharmacy Dashboard</h1>
-            <p>Welcome, {user?.name || 'User'}! Manage your medicines and stock efficiently.</p>
+            <span className="dashboard-eyebrow">OPERATIONS CENTER · LIVE INVENTORY</span>
+            <h1>Pharmacy Dashboard</h1>
           </div>
-          <div className="header-actions">
-            <button onClick={() => navigate('/ai/insights')} className="btn btn-primary">
-              🤖 AI Insights
-            </button>
-            <button onClick={() => navigate('/delivery')} className="btn btn-success">
-              🚚 Delivery
-            </button>
-            <button onClick={() => navigate('/prescriptions')} className="btn btn-secondary">
-              📋 Prescriptions
-            </button>
-            <button onClick={handleLogout} className="btn btn-secondary">
-              Logout
-            </button>
+          <div className="dashboard-welcome">
+            <p>
+              <span className="welcome-greeting">Welcome back, {user?.name || 'User'}.</span>
+              <span className="welcome-message">Keep your medicine availability accurate and up to date.</span>
+            </p>
           </div>
         </div>
+        <div className="header-actions">
+          <button onClick={() => navigate('/ai/insights')} className="btn btn-primary">
+            🤖 AI Insights
+          </button>
+          <button onClick={() => navigate('/delivery')} className="btn btn-success">
+            🚚 Delivery
+          </button>
+          <button onClick={() => navigate('/prescriptions')} className="btn btn-secondary">
+            📋 Prescriptions
+          </button>
+          <button onClick={handleLogout} className="btn btn-secondary">
+            Logout
+          </button>
+        </div>
         <div className="dashboard-quick-stats">
-          <div className="quick-stat-card">
+          <button type="button" className="quick-stat-card" onClick={() => handleQuickFilter('all')} title="Show all medicines">
             <span className="quick-stat-icon">💊</span>
             <div className="quick-stat-content">
               <strong>{medicines.length}</strong>
               <small>Total Medicines</small>
             </div>
-          </div>
-          <div className="quick-stat-card">
+          </button>
+          <button type="button" className="quick-stat-card" onClick={() => handleQuickFilter('good')} title="Show medicines with good stock">
             <span className="quick-stat-icon">✅</span>
             <div className="quick-stat-content">
               <strong>{medicines.filter(m => m.available && m.stock > 0).length}</strong>
               <small>In Stock</small>
             </div>
-          </div>
-          <div className="quick-stat-card">
+          </button>
+          <button type="button" className="quick-stat-card" onClick={() => handleQuickFilter('low_stock')} title="Show low stock medicines">
             <span className="quick-stat-icon">⚠️</span>
             <div className="quick-stat-content">
               <strong>{medicines.filter(m => m.stock > 0 && m.stock < (m.stockAlert || 10)).length}</strong>
               <small>Low Stock</small>
             </div>
-          </div>
-          <div className="quick-stat-card">
+          </button>
+          <button type="button" className="quick-stat-card" onClick={() => handleQuickFilter('out_of_stock')} title="Show out of stock medicines">
             <span className="quick-stat-icon">❌</span>
             <div className="quick-stat-content">
               <strong>{medicines.filter(m => !m.available || m.stock === 0).length}</strong>
               <small>Out of Stock</small>
             </div>
-          </div>
+          </button>
         </div>
       </header>
-
-      <div className="dashboard-stats fade-in-stagger">
-        <div className="stat-card">
-          <h3>{medicines.length}</h3>
-          <p>Total Medicines</p>
-        </div>
-        <div className="stat-card">
-          <h3>{medicines.filter(m => m.available && m.stock > 0).length}</h3>
-          <p>In Stock</p>
-        </div>
-        <div className="stat-card">
-          <h3>{medicines.filter(m => !m.available || m.stock === 0).length}</h3>
-          <p>Out of Stock</p>
-        </div>
-        <div className="stat-card">
-          <h3>{medicines.filter(m => m.stock > 0 && m.stock < (m.stockAlert || 10)).length}</h3>
-          <p>Low Stock</p>
-        </div>
-      </div>
 
       <div className="dashboard-heatmap-preview fade-in-up">
         <HeatmapPreviewCard compact={true} />
@@ -303,7 +313,11 @@ export default function Dashboard() {
       <div className="dashboard-content">
         <div className="medicines-section fade-in-up">
           <div className="section-header">
-            <h2>Medicines</h2>
+            <div className="section-heading-copy">
+              <span className="section-kicker">INVENTORY</span>
+              <h2>Medicines</h2>
+              <p>Keep availability accurate and customers informed.</p>
+            </div>
             <button 
               onClick={() => setShowForm(!showForm)} 
               className="btn btn-primary"
@@ -414,9 +428,46 @@ export default function Dashboard() {
             </form>
           )}
 
+          {!loading && medicines.length > 0 && (
+            <div className="inventory-toolbar" aria-label="Filter medicines">
+              <div className="inventory-toolbar-heading">
+                <span className="inventory-result-count">
+                  Showing <strong>{filteredMedicines.length}</strong> of {medicines.length}
+                </span>
+                {(searchTerm || categoryFilter !== 'all' || stockFilter !== 'all') && (
+                  <button type="button" className="clear-filters" onClick={clearFilters}>
+                    Clear filters
+                  </button>
+                )}
+              </div>
+              <div className="inventory-filters">
+                <label className="inventory-search">
+                  <span aria-hidden="true">⌕</span>
+                  <input
+                    type="search"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Search medicines"
+                    aria-label="Search medicines"
+                  />
+                </label>
+                <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)} aria-label="Filter by category">
+                  <option value="all">All categories</option>
+                  {categories.map((category) => <option key={category} value={category}>{category}</option>)}
+                </select>
+                <select value={stockFilter} onChange={(event) => setStockFilter(event.target.value)} aria-label="Filter by stock status">
+                  <option value="all">All stock health</option>
+                  <option value="good">Good stock</option>
+                  <option value="low_stock">Low stock</option>
+                  <option value="out_of_stock">Out of stock</option>
+                </select>
+              </div>
+            </div>
+          )}
+
           {loading ? (
             <p className="loading">Loading medicines...</p>
-          ) : medicines.length > 0 ? (
+          ) : filteredMedicines.length > 0 ? (
             <div className="medicines-table-wrapper fade-in-up">
               <table className="medicines-table">
                 <thead>
@@ -430,7 +481,7 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {medicines.map((medicine) => {
+                  {filteredMedicines.map((medicine) => {
                     const stockStatus = getStockStatus(medicine);
                     return (
                       <tr key={medicine._id} className={`status-${stockStatus.status}`}>
@@ -498,6 +549,8 @@ export default function Dashboard() {
                 </tbody>
               </table>
             </div>
+          ) : medicines.length > 0 ? (
+            <p className="no-medicines">No medicines match these filters. Try clearing your search or selecting a different status.</p>
           ) : (
             <p className="no-medicines">No medicines added yet. Click "Add Medicine" to get started.</p>
           )}

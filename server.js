@@ -171,12 +171,13 @@ app.use(errorHandler.handle());
 // ===============================
 // Server Startup with Error Handling
 // ===============================
-let PORT = process.env.PORT || 5001;
+let PORT = Number(process.env.PORT || 5001);
+let HOST = process.env.HOST || '127.0.0.1';
 
 let server;
 
-function startServer(port) {
-  server = app.listen(port, '0.0.0.0', () => {
+function startServer(port, host = HOST) {
+  server = app.listen(port, host, () => {
     console.log(`
 ╔════════════════════════════════════════════════════╗
 ║  🏥 MediNear - Enterprise Medicine Platform       ║
@@ -196,26 +197,34 @@ function startServer(port) {
     
     logger.success('MediNear Server Started Successfully', {
       port: port,
+      host: host,
       environment: process.env.NODE_ENV || 'development',
       timestamp: new Date().toISOString()
     });
   });
 
   server.on('error', (err) => {
+    if ((err.code === 'EADDRINUSE' || err.code === 'EACCES' || err.code === 'EPERM') && host !== '127.0.0.1') {
+      logger.warn(`Bind failed on ${host}:${port}, retrying with localhost`, { error: err.message, port, host });
+      console.warn(`⚠️  Binding to ${host}:${port} failed (${err.code}). Retrying with 127.0.0.1:${port}...`);
+      startServer(port, '127.0.0.1');
+      return;
+    }
+
     if (err.code === 'EADDRINUSE') {
       logger.error(`Port ${port} is already in use`, { error: err.message, port });
       console.error(`❌ Port ${port} is already in use.`);
       console.error('Run `npm run restart` to free port 5001 and start the backend again.');
       process.exit(1);
-    } else {
-      logger.error('Server error', { error: err.message, stack: err.stack });
-      console.error('Server error:', err);
     }
+
+    logger.error('Server error', { error: err.message, stack: err.stack, host });
+    console.error('Server error:', err);
   });
 }
 
 try {
-  startServer(PORT);
+  startServer(PORT, HOST);
 } catch (err) {
   logger.error('Failed to start server', { error: err.message, stack: err.stack });
   console.error('❌ Failed to start server:', err.message);

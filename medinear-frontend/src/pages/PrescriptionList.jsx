@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { prescriptionAPI } from '../api';
+import { getAssetUrl, prescriptionAPI } from '../api';
 import { useAuth } from '../AuthContext';
 import './Prescription.css';
 
@@ -147,7 +147,7 @@ export default function PrescriptionList() {
                     {prescription.prescriptionImage && (
                       <div className="card-image">
                         <img
-                          src={`http://localhost:5001/prescriptions/${prescription.prescriptionImage}`}
+                          src={getAssetUrl(`prescriptions/${prescription.prescriptionImage}`)}
                           alt="Prescription"
                           onClick={() => navigate(`/prescription/${prescription._id}`)}
                           onError={(e) => {

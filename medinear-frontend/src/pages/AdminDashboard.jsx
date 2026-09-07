@@ -2,27 +2,8 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
-import axios from 'axios';
+import api from '../api';
 import './AdminDashboard.css';
-
-const resolveAdminApiBase = () => {
-  const envApiUrl = String(import.meta.env.VITE_API_URL || '').trim();
-
-  if (import.meta.env.DEV && typeof window !== 'undefined') {
-    const currentHost = window.location.hostname;
-    const isLocalHost = currentHost === 'localhost' || currentHost === '127.0.0.1';
-    const envLooksLocal = /localhost|127\.0\.0\.1/i.test(envApiUrl);
-
-    // Prevent stale LAN API URL from breaking local admin dashboard.
-    if (isLocalHost && envApiUrl && !envLooksLocal) {
-      return 'http://127.0.0.1:5001/api';
-    }
-  }
-
-  return envApiUrl || 'http://127.0.0.1:5001/api';
-};
-
-const API_BASE = resolveAdminApiBase();
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -280,7 +261,7 @@ function AdminDashboard() {
         return;
       }
 
-      const response = await axios.get(`${API_BASE}/admin/dashboard/stats`, {
+      const response = await api.get('/admin/dashboard/stats', {
         params: buildDateRangeParams(),
         headers: apiHeaders,
         timeout: 20000,
@@ -324,7 +305,7 @@ function AdminDashboard() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE}/admin/users`, {
+      const response = await api.get('/admin/users', {
         params: { page: userPage, limit: 10, search: searchUser, ...buildDateRangeParams() },
         headers: apiHeaders,
       });
@@ -341,7 +322,7 @@ function AdminDashboard() {
   const fetchMedicines = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE}/admin/medicines`, {
+      const response = await api.get('/admin/medicines', {
         params: { page: 1, limit: 10, search: searchMedicine, ...buildDateRangeParams() },
         headers: apiHeaders,
       });
@@ -357,7 +338,7 @@ function AdminDashboard() {
   const fetchPharmacies = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE}/admin/pharmacies`, {
+      const response = await api.get('/admin/pharmacies', {
         params: { page: pharmacyPage, limit: 50, search: searchPharmacy, ...buildDateRangeParams() },
         headers: apiHeaders,
       });
@@ -374,7 +355,7 @@ function AdminDashboard() {
   const fetchReservations = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE}/admin/reservations`, {
+      const response = await api.get('/admin/reservations', {
         params: {
           page: 1,
           limit: 10,
@@ -395,7 +376,7 @@ function AdminDashboard() {
   const deleteUser = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
-      await axios.delete(`${API_BASE}/admin/users/${userId}`, {
+      await api.delete(`/admin/users/${userId}`, {
         headers: apiHeaders,
       });
       showToast?.('User deleted successfully', 'success');
@@ -409,7 +390,7 @@ function AdminDashboard() {
   const deleteMedicine = async (medicineId) => {
     if (!window.confirm('Are you sure you want to delete this medicine?')) return;
     try {
-      await axios.delete(`${API_BASE}/admin/medicines/${medicineId}`, {
+      await api.delete(`/admin/medicines/${medicineId}`, {
         headers: apiHeaders,
       });
       showToast?.('Medicine deleted successfully', 'success');
@@ -422,7 +403,7 @@ function AdminDashboard() {
   const deletePharmacy = async (pharmacyId) => {
     if (!window.confirm('Are you sure you want to delete this pharmacy?')) return;
     try {
-      await axios.delete(`${API_BASE}/admin/pharmacies/${pharmacyId}`, {
+      await api.delete(`/admin/pharmacies/${pharmacyId}`, {
         headers: apiHeaders,
       });
       showToast?.('Pharmacy deleted successfully', 'success');
@@ -434,8 +415,8 @@ function AdminDashboard() {
 
   const updateReservationStatus = async (reservationId, newStatus) => {
     try {
-      await axios.put(
-        `${API_BASE}/admin/reservations/${reservationId}/status`,
+      await api.put(
+        `/admin/reservations/${reservationId}/status`,
         { status: newStatus },
         { headers: apiHeaders }
       );
@@ -463,8 +444,8 @@ function AdminDashboard() {
         return;
       }
 
-      await axios.post(
-        `${API_BASE}/admin/medicines`,
+      await api.post(
+        '/admin/medicines',
         {
           ...newMedicine,
           pharmacy: pharmacyId,
@@ -502,8 +483,8 @@ function AdminDashboard() {
         return;
       }
 
-      await axios.put(
-        `${API_BASE}/admin/medicines/${selectedMedicineForStock._id}/stock`,
+      await api.put(
+        `/admin/medicines/${selectedMedicineForStock._id}/stock`,
         {
           stock: stockUpdate.stock !== '' ? parseInt(stockUpdate.stock) : undefined,
           stockAlert: stockUpdate.stockAlert ? parseInt(stockUpdate.stockAlert) : undefined

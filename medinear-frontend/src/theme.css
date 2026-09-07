@@ -1,20 +1,22 @@
 /* Global Theme Variables */
 :root {
+  --font-display: 'DM Sans', 'Avenir Next', sans-serif;
+  --font-body: 'DM Sans', 'Avenir Next', sans-serif;
   /* Light Mode (Default) */
   --bg-primary: #ffffff;
-  --bg-secondary: #f5f5f5;
-  --bg-tertiary: #efefef;
+  --bg-secondary: #f4f7f5;
+  --bg-tertiary: #e9f0ed;
   
-  --text-primary: #1a1a1a;
-  --text-secondary: #666666;
-  --text-tertiary: #999999;
+  --text-primary: #143331;
+  --text-secondary: #5c706e;
+  --text-tertiary: #879896;
   
-  --border-color: #e0e0e0;
-  --border-light: #f0f0f0;
+  --border-color: #dce7e3;
+  --border-light: #edf3f0;
   
-  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --card-shadow-hover: 0 8px 24px rgba(102, 126, 234, 0.15);
-  --card-shadow-depth: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --card-shadow: 0 10px 30px rgba(20, 51, 49, 0.07);
+  --card-shadow-hover: 0 18px 40px rgba(20, 51, 49, 0.13);
+  --card-shadow-depth: 0 4px 14px rgba(20, 51, 49, 0.08);
   
   /* Glass Effect - Light Mode */
   --glass-bg: rgba(255, 255, 255, 0.8);
@@ -22,9 +24,9 @@
   --glass-blur: 10px;
   
   /* Brand Colors */
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary: #667eea;
-  --primary-dark: #764ba2;
+  --primary-gradient: linear-gradient(135deg, #0d7c70 0%, #075b58 100%);
+  --primary: #0d7c70;
+  --primary-dark: #075b58;
   
   --success: #4CAF50;
   --error: #f44336;
@@ -45,9 +47,9 @@
   --spacing-xxl: 3rem;
   
   /* Border Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
 }
 
 /* Dark Mode */

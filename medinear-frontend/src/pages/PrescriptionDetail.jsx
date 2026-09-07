@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { prescriptionAPI } from '../api';
+import { getAssetUrl, prescriptionAPI } from '../api';
 import { useAuth } from '../AuthContext';
 import './Prescription.css';
 
@@ -126,7 +126,7 @@ export default function PrescriptionDetail() {
           <h3>📸 Prescription Image</h3>
           <div className="image-container">
             <img
-              src={`http://localhost:5001/prescriptions/${prescription.prescriptionImage}`}
+              src={getAssetUrl(`prescriptions/${prescription.prescriptionImage}`)}
               alt="Prescription"
               className="prescription-image"
               onError={(e) => {

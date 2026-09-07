@@ -59,6 +59,10 @@ const resolveApiBaseUrl = () => {
 };
 
 const API_BASE_URL = resolveApiBaseUrl();
+export const getAssetUrl = (assetPath) => {
+  const asset = String(assetPath || '').replace(/^\/+/, '');
+  return `${API_BASE_URL.replace(/\/api\/?$/, '')}/${asset}`;
+};
 
 // Log API configuration (only in development)
 if (import.meta.env.DEV) {

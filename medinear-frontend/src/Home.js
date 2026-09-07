@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { medicineAPI } from './api';
 
 function Home() {
   const [query, setQuery] = useState("");
@@ -7,10 +7,8 @@ function Home() {
 
   const searchMedicine = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:5001/api/medicines/search?q=${query}`
-      );
-      setMedicines(res.data);
+      const res = await medicineAPI.search(query);
+      setMedicines(res.data?.data || res.data || []);
     } catch (error) {
       console.error(error);
       alert("Error fetching medicines");

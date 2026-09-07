@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { analyticsAPI } from '../api';
 import './AreaHeatmap.css';
 
 export default function AreaHeatmap() {
@@ -18,8 +19,8 @@ export default function AreaHeatmap() {
   const loadHeatmap = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/analytics/heatmap/area');
-      const data = await response.json();
+      const response = await analyticsAPI.getAreaHeatmap();
+      const data = response.data;
       
       if (data.success) {
         setHeatmapData(data);
